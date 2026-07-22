@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard BPS Kabupaten Cilacap</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="../logo_bps/logo%20bps.webp" alt="Logo BPS" class="bps-logo-img">
+                <div class="brand-text">
+                    <h2>BPS CILACAP</h2>
+                    <span>Admin Panel</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active" data-tab="overview">
+                    <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="nav-text">Overview</span>
+                </div>
+                <div class="nav-item" data-tab="indikator">
+                    <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
+                    <span class="nav-text">Data Indikator</span>
+                </div>
+                <div class="nav-item" data-tab="runtun">
+                    <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+                    <span class="nav-text">Runtun Waktu</span>
+                </div>
+                <div class="nav-item" data-tab="kecamatan">
+                    <span class="nav-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                    <span class="nav-text">Data Kecamatan</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="user-info">
+                        <h4>Admin Utama</h4>
+                        <p>BPS Cilacap</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <h2 id="current-tab-title">Overview</h2>
+                    <span>Pengelolaan Data Statistik Kabupaten Cilacap</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="live-clock" id="live-clock">
+                        <i class="fa-regular fa-calendar-days" style="margin-right: 6px;"></i> Memuat waktu...
+                    </div>
+                    <div class="notification-badge">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge-dot"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ================= OVERVIEW TAB ================= -->
+            <section id="overview" class="tab-content active">
+                <div class="admin-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Sistem Pengelolaan Data Statistik & Indikator Sektoral Kabupaten Cilacap</p>
+                </div>
+
+                <!-- Dashboard Menu Cards -->
+                <div class="dashboard-menu">
+                    <div class="menu-card indikator">
+                        <div class="icon"><i class="fa-solid fa-chart-column"></i></div>
+                        <h2>Data Indikator</h2>
+                        <p>Kelola data indikator statistik utama yang digunakan pada sistem dashboard visualisasi.</p>
+                        <button onclick="switchTab('indikator')">Kelola Data</button>
+                    </div>
+
+                    <div class="menu-card runtun">
+                        <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <h2>Data Runtun Waktu</h2>
+                        <p>Kelola data berkala berdasarkan periode waktu untuk analisis perkembangan (time series).</p>
+                        <button onclick="switchTab('runtun')">Kelola Data</button>
+                    </div>
+
+                    <div class="menu-card kecamatan">
+                        <div class="icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h2>Data Kecamatan</h2>
+                        <p>Kelola informasi wilayah kecamatan dan data spasial statistik sektoral Cilacap.</p>
+                        <button onclick="switchTab('kecamatan')">Kelola Data</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= DATA INDIKATOR TAB ================= -->
+            <section id="indikator" class="tab-content indikator-section">
+                <div class="section-header">
+                    <h2>Data Indikator</h2>
+                    <p>Input data indikator statistik sektoral berdasarkan tahun yang dipilih</p>
+                </div>
+
+                <!-- PILIH TAHUN -->
+                <div class="tahun-box">
+                    <label>Pilih Tahun Data</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="indikator-tahun-select" style="width: 200px;">
+                            <option value="" selected disabled>-- Pilih Tahun --</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
+                        <button type="button" id="btn-add-indikator-tahun" style="padding: 10px 15px; border: 1px dashed var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); font-size: 13px;">+ Tambah Tahun</button>
+                    </div>
+                </div>
+
+                <!-- FORM 9 INDIKATOR -->
+                <div class="indikator-form">
+                    <h3>Form Input Indikator</h3>
+                    <div class="indikator-grid">
+                        <div>
+                            <label>Indikator 1 (Tingkat Kemiskinan %)</label>
+                            <input type="number" step="any" id="ind-1" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 2 (Tingkat Pengangguran Terbuka %)</label>
+                            <input type="number" step="any" id="ind-2" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 3 (Indeks Pembangunan Manusia)</label>
+                            <input type="number" step="any" id="ind-3" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 4 (Angka Harapan Hidup - Tahun)</label>
+                            <input type="number" step="any" id="ind-4" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 5 (Rata-rata Lama Sekolah - Tahun)</label>
+                            <input type="number" step="any" id="ind-5" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 6 (Harapan Lama Sekolah - Tahun)</label>
+                            <input type="number" step="any" id="ind-6" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 7 (Pengeluaran Per Kapita Disesuaikan - Rp)</label>
+                            <input type="number" step="any" id="ind-7" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 8 (Laju Pertumbuhan Ekonomi %)</label>
+                            <input type="number" step="any" id="ind-8" placeholder="Masukkan nilai">
+                        </div>
+                        <div>
+                            <label>Indikator 9 (Kepadatan Penduduk - Jiwa/km²)</label>
+                            <input type="number" step="any" id="ind-9" placeholder="Masukkan nilai">
+                        </div>
+                    </div>
+                    <button class="btn-simpan" id="btn-save-indikator">Simpan Data</button>
+                </div>
+            </section>
+
+            <!-- ================= DATA RUNTUN WAKTU TAB ================= -->
+            <section id="runtun" class="tab-content runtun-section">
+                <div class="section-header">
+                    <h2>Data Runtun Waktu</h2>
+                    <p>Kelola data statistik sektoral berkala berdasarkan deret waktu tahunan</p>
+                </div>
+
+                <div class="runtun-container">
+                    <!-- INPUT DATA -->
+                    <div class="runtun-input-card">
+                        <h3 id="runtun-form-title">Input Data Baru</h3>
+                        <input type="hidden" id="runtun-edit-id" value="">
+                        
+                        <div class="form-group">
+                            <label>Nama Data / Indikator</label>
+                            <input type="text" id="runtun-nama" placeholder="Contoh : Jumlah Penduduk">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pilih Tahun Data</label>
+                            <div class="tahun-list" id="runtun-tahun-list">
+                                <button class="tambah-tahun" id="btn-add-runtun-tahun"><i class="fa-solid fa-plus"></i> Tahun</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nilai Data</label>
+                            <input type="number" step="any" id="runtun-nilai" placeholder="Masukkan nilai">
+                        </div>
+
+                        <button class="btn-simpan" id="btn-save-runtun"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
+                    </div>
+
+                    <!-- DATA TERSEDIA -->
+                    <div class="runtun-list-card">
+                        <h3>Data Runtun Waktu Tersimpan</h3>
+                        <div class="runtun-list-wrapper" id="runtun-saved-list">
+                            <!-- Items populated dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= DATA KECAMATAN TAB ================= -->
+            <section id="kecamatan" class="tab-content kecamatan-section">
+                <div class="section-header">
+                    <h2>Data Kecamatan</h2>
+                    <p>Pengelolaan indikator statistik sektoral berdasarkan wilayah kecamatan</p>
+                </div>
+
+                <div class="kecamatan-container">
+                    
+                    <!-- INPUT VARIABEL -->
+                    <div class="kecamatan-card">
+                        <h3>Tambah Variabel Kecamatan</h3>
+                        
+                        <div class="form-group">
+                            <label>Tahun Data</label>
+                            <div style="display: flex; gap: 10px;">
+                                <select id="kec-input-tahun">
+                                    <option value="" selected disabled>Pilih Tahun</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                                <button type="button" id="btn-add-kec-input-tahun" style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+ Tahun</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tema Besar</label>
+                            <div style="display: flex; gap: 10px;">
+                                <select id="kec-input-tema" style="flex: 1;">
+                                    <option value="" selected disabled>Pilih Tema</option>
+                                    <option value="Pertanian">Pertanian</option>
+                                    <option value="Kesehatan">Kesehatan</option>
+                                    <option value="Pendidikan">Pendidikan</option>
+                                    <option value="Ekonomi">Ekonomi</option>
+                                    <option value="Kependudukan">Kependudukan</option>
+                                </select>
+                                <button type="button" id="btn-add-kec-tema" style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+ Tema</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nama Variabel</label>
+                            <input type="text" id="kec-input-variabel" placeholder="Contoh : Produksi Padi">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Input Nilai Kecamatan (Pemisah Titik Koma ';')</label>
+                            <textarea id="kec-input-nilai" placeholder="Masukkan 24 nilai berurutan dipisahkan titik koma. Contoh :&#10;838273;12000;9000;7000;..."></textarea>
+                            <small>Urutan mengikuti daftar kecamatan yang telah ditentukan (24 Kecamatan)</small>
+                        </div>
+
+                        <button class="btn-simpan" id="btn-save-kec-var">Tambahkan Variabel</button>
+                    </div>
+
+                    <!-- PILIH DATA VISUALISASI -->
+                    <div class="kecamatan-card">
+                        <h3>Pilih Data Visualisasi</h3>
+                        
+                        <div class="form-group">
+                            <label>Tahun</label>
+                            <select id="kec-filter-tahun">
+                                <option value="2025" selected>2025</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tema Besar</label>
+                            <select id="kec-filter-tema">
+                                <option value="Pertanian" selected>Pertanian</option>
+                                <option value="Kesehatan">Kesehatan</option>
+                                <option value="Pendidikan">Pendidikan</option>
+                                <option value="Ekonomi">Ekonomi</option>
+                                <option value="Kependudukan">Kependudukan</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Variabel</label>
+                            <div style="display: flex; gap: 10px;">
+                                <select id="kec-filter-variabel" style="flex: 1;">
+                                    <option value="" selected disabled>Pilih Variabel</option>
+                                </select>
+                                <button type="button" id="btn-delete-kec-var" style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus Variabel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABEL DATA -->
+                    <div class="kecamatan-card tabel-card">
+                        <div class="table-controls">
+                            <h3 id="tabel-judul-kecamatan">Data Pertanian Tahun 2025</h3>
+                            <div class="search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="kec-table-search" placeholder="Cari nama kecamatan...">
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="kecamatan-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px; text-align: center;">No</th>
+                                        <th>Kecamatan</th>
+                                        <th id="th-variabel-nama">Produksi Padi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kecamatan-table-body">
+                                    <!-- Will be populated dynamically by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // ============================================================
+        // KONFIGURASI API
+        // ============================================================
+        const API = ''; // Sama-origin: http://localhost:5000
+
+        // Helper untuk mem-parsing input tahun (koma, spasi, titik koma, rentang seperti 2024-2026)
+        function parseYears(inputString) {
+            const years = [];
+            const parts = inputString.split(/[\s,;\/]+/);
+            for (let part of parts) {
+                part = part.trim();
+                if (!part) continue;
+                if (part.includes('-')) {
+                    const rangeParts = part.split('-');
+                    if (rangeParts.length === 2) {
+                        const start = parseInt(rangeParts[0]);
+                        const end = parseInt(rangeParts[1]);
+                        if (!isNaN(start) && !isNaN(end) && start <= end && start >= 1990 && end <= 2100) {
+                            for (let y = start; y <= end; y++) {
+                                if (!years.includes(y)) years.push(y);
+                            }
+                            continue;
+                        }
+                    }
+                }
+                const y = parseInt(part);
+                if (!isNaN(y) && y >= 1990 && y <= 2100) {
+                    if (!years.includes(y)) years.push(y);
+                }
+            }
+            return years.sort((a, b) => a - b);
+        }
+
+        const KECAMATAN_NAMES = [
+            "Dayeuhluhur", "Wanareja", "Majenang", "Cimanggu", "Karangpucung",
+            "Cipari", "Sidareja", "Kedungreja", "Patimuan", "Gandrungmangu",
+            "Bantarsari", "Kawunganten", "Kampung Laut", "Jeruklegi", "Kesugihan",
+            "Adipala", "Maos", "Sampang", "Kroya", "Binangun",
+            "Nusawungu", "Cilacap Selatan", "Cilacap Tengah", "Cilacap Utara"
+        ];
+
+        // ============================================================
+        // NAVIGASI TAB
+        // ============================================================
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const currentTabTitle = document.getElementById('current-tab-title');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function () {
+                switchTab(this.getAttribute('data-tab'));
+            });
+        });
+
+        function switchTab(tabId) {
+            navItems.forEach(i => i.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            const nav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+            if (nav) nav.classList.add('active');
+            const content = document.getElementById(tabId);
+            if (content) {
+                content.classList.add('active');
+                document.querySelector('.main-content').scrollTop = 0;
+            }
+            const titles = { overview: 'Overview', indikator: 'Data Indikator', runtun: 'Data Runtun Waktu', kecamatan: 'Data Kecamatan' };
+            currentTabTitle.textContent = titles[tabId] || 'Dashboard';
+        }
+
+        // ============================================================
+        // JAM LIVE
+        // ============================================================
+        function updateClock() {
+            const el = document.getElementById('live-clock');
+            const now = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            el.innerHTML = `<i class="fa-regular fa-calendar-days" style="margin-right: 6px;"></i> ${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} | <i class="fa-regular fa-clock" style="margin-left: 10px; margin-right: 6px;"></i> ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // ============================================================
+        // TOAST NOTIFICATIONS
+        // ============================================================
+        function showToast(type, title, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { 
+                success: '<i class="fa-solid fa-circle-check" style="color: #10B981;"></i>', 
+                error: '<i class="fa-solid fa-circle-xmark" style="color: #EF4444;"></i>', 
+                warning: '<i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i>' 
+            };
+            toast.innerHTML = `<div class="toast-icon">${icons[type] || '<i class="fa-solid fa-bell"></i>'}</div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4000);
+        }
+
+        // ============================================================
+        // DATA INDIKATOR
+        // ============================================================
+        const indYearSelect = document.getElementById('indikator-tahun-select');
+        const saveIndBtn = document.getElementById('btn-save-indikator');
+        const addIndYearBtn = document.getElementById('btn-add-indikator-tahun');
+
+        async function initIndikatorYears() {
+            try {
+                const res = await fetch(`${API}/api/indikator`);
+                const data = await res.json();
+                const yearsFromDb = Object.keys(data).map(Number);
+                
+                // default years 2020-2025
+                const defaultYears = [2020, 2021, 2022, 2023, 2024, 2025];
+                const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => a - b);
+                
+                indYearSelect.innerHTML = '<option value="" selected disabled>-- Pilih Tahun --</option>';
+                allYears.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    indYearSelect.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Gagal memuat tahun indikator:", e);
+            }
+        }
+
+        indYearSelect.addEventListener('change', async function () {
+            const tahun = this.value;
+            if (!tahun) return;
+            try {
+                const res = await fetch(`${API}/api/indikator?tahun=${tahun}`);
+                const data = await res.json();
+                for (let i = 1; i <= 9; i++) {
+                    const val = data[`ind${i}`];
+                    document.getElementById(`ind-${i}`).value = (val !== null && val !== undefined) ? val : '';
+                }
+                if (Object.keys(data).length > 0) {
+                    showToast('success', 'Data Dimuat', `Data indikator tahun ${tahun} berhasil ditampilkan.`);
+                } else {
+                    showToast('warning', 'Data Kosong', `Belum ada data untuk tahun ${tahun}. Silakan isi dan simpan.`);
+                }
+            } catch (e) {
+                showToast('error', 'Gagal Terhubung', 'Tidak dapat memuat data. Pastikan server Python berjalan.');
+            }
+        });
+
+        saveIndBtn.addEventListener('click', async function () {
+            const tahun = indYearSelect.value;
+            if (!tahun) { showToast('error', 'Gagal', 'Pilih tahun terlebih dahulu.'); return; }
+            const payload = { tahun };
+            for (let i = 1; i <= 9; i++) {
+                const val = document.getElementById(`ind-${i}`).value;
+                payload[`ind${i}`] = val === '' ? null : parseFloat(val);
+            }
+            try {
+                const res = await fetch(`${API}/api/indikator`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) showToast('success', 'Berhasil Disimpan', `Data indikator tahun ${tahun} tersimpan ke server.`);
+                else showToast('error', 'Gagal', 'Terjadi kesalahan saat menyimpan.');
+            } catch (e) {
+                showToast('error', 'Gagal Terhubung', 'Pastikan server Python berjalan.');
+            }
+        });
+
+        addIndYearBtn.addEventListener('click', function () {
+            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):');
+            if (!yr) return;
+            const years = parseYears(yr);
+            if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
+            
+            years.forEach(y => {
+                if (!indYearSelect.querySelector(`option[value="${y}"]`)) {
+                    const newOpt = document.createElement('option');
+                    newOpt.value = y; newOpt.textContent = y;
+                    const opts = Array.from(indYearSelect.options).filter(o => o.value !== '');
+                    opts.push(newOpt); opts.sort((a, b) => parseInt(a.value) - parseInt(b.value));
+                    while (indYearSelect.options.length > 1) indYearSelect.remove(1);
+                    opts.forEach(o => indYearSelect.add(o));
+                }
+            });
+            const lastYear = years[years.length - 1];
+            indYearSelect.value = lastYear;
+            indYearSelect.dispatchEvent(new Event('change'));
+            showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
+        });
+
+        // ============================================================
+        // DATA RUNTUN WAKTU
+        // ============================================================
+        let runtunData = [];
+        let selectedRuntunTahun = null;
+        let activeRuntunYears = []; // array of numbers representing years currently shown on the form
+
+        const runtunTahunListContainer = document.getElementById('runtun-tahun-list');
+        const saveRuntunBtn = document.getElementById('btn-save-runtun');
+        const runtunNamaInput = document.getElementById('runtun-nama');
+        const runtunNilaiInput = document.getElementById('runtun-nilai');
+        const addRuntunTahunBtn = document.getElementById('btn-add-runtun-tahun');
+        const runtunSavedListContainer = document.getElementById('runtun-saved-list');
+        const runtunFormTitle = document.getElementById('runtun-form-title');
+        const runtunEditId = document.getElementById('runtun-edit-id');
+
+        function updateRuntunFormFromSelection() {
+            const nama = runtunNamaInput.value.trim();
+            if (!selectedRuntunTahun) {
+                runtunEditId.value = '';
+                runtunFormTitle.textContent = 'Input Data Baru';
+                saveRuntunBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
+                return;
+            }
+            if (!nama) {
+                runtunNilaiInput.value = '';
+                runtunEditId.value = '';
+                runtunFormTitle.textContent = `Input Data Baru (${selectedRuntunTahun})`;
+                saveRuntunBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
+                return;
+            }
+            const existing = runtunData.find(r => 
+                r.nama.toLowerCase() === nama.toLowerCase() && r.tahun === selectedRuntunTahun.toString()
+            );
+            if (existing) {
+                runtunNilaiInput.value = existing.nilai;
+                runtunEditId.value = existing.id;
+                runtunFormTitle.textContent = `Edit: ${existing.nama} (${selectedRuntunTahun})`;
+                saveRuntunBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Perbarui Data';
+            } else {
+                runtunNilaiInput.value = '';
+                runtunEditId.value = '';
+                runtunFormTitle.textContent = `Input Data Baru (${selectedRuntunTahun})`;
+                saveRuntunBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
+            }
+        }
+
+        runtunNamaInput.addEventListener('input', () => {
+            renderRuntunYears();
+            updateRuntunFormFromSelection();
+        });
+
+        function setupRuntunYearButtons() {
+            document.querySelectorAll('.runtun-tahun-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.runtun-tahun-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedRuntunTahun = this.getAttribute('data-value');
+                    updateRuntunFormFromSelection();
+                });
+            });
+        }
+
+        function renderRuntunYears() {
+            const nama = runtunNamaInput.value.trim().toLowerCase();
+            let yearsToShow = [];
+            
+            if (nama) {
+                const records = runtunData.filter(r => r.nama.toLowerCase() === nama);
+                const dbYears = records.map(r => parseInt(r.tahun));
+                yearsToShow = Array.from(new Set([...activeRuntunYears, ...dbYears])).sort((a, b) => a - b);
+            } else {
+                yearsToShow = [...activeRuntunYears].sort((a, b) => a - b);
+            }
+            
+            // remove existing buttons
+            const buttons = runtunTahunListContainer.querySelectorAll('.runtun-tahun-btn');
+            buttons.forEach(btn => btn.remove());
+            
+            // append buttons
+            yearsToShow.forEach(year => {
+                const btn = document.createElement('button');
+                btn.className = 'runtun-tahun-btn';
+                btn.setAttribute('data-value', year);
+                btn.textContent = year;
+                if (selectedRuntunTahun == year) {
+                    btn.classList.add('active');
+                }
+                runtunTahunListContainer.insertBefore(btn, addRuntunTahunBtn);
+            });
+            setupRuntunYearButtons();
+        }
+
+        addRuntunTahunBtn.addEventListener('click', function () {
+            const buttons = runtunTahunListContainer.querySelectorAll('.runtun-tahun-btn');
+            const currentYears = Array.from(buttons).map(b => parseInt(b.getAttribute('data-value'))).sort((a, b) => a - b);
+            
+            let nextYearSuggest = "";
+            if (currentYears.length > 0) {
+                nextYearSuggest = currentYears[currentYears.length - 1] + 1;
+            } else {
+                nextYearSuggest = "2020";
+            }
+            
+            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):', nextYearSuggest);
+            if (!yr) return;
+            const years = parseYears(yr);
+            if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
+            
+            years.forEach(y => {
+                if (!activeRuntunYears.includes(y)) {
+                    activeRuntunYears.push(y);
+                }
+            });
+            
+            selectedRuntunTahun = years[years.length - 1].toString();
+            renderRuntunYears();
+            updateRuntunFormFromSelection();
+            
+            const newBtn = runtunTahunListContainer.querySelector(`.runtun-tahun-btn[data-value="${selectedRuntunTahun}"]`);
+            if (newBtn) newBtn.click();
+            showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
+        });
+
+        async function loadRuntunData() {
+            try {
+                const res = await fetch(`${API}/api/runtun`);
+                runtunData = await res.json();
+                if (!Array.isArray(runtunData)) runtunData = [];
+                renderRuntunYears();
+                renderRuntunList();
+            } catch (e) {
+                runtunSavedListContainer.innerHTML = '<p style="color:#e74c3c;padding:15px">Gagal memuat data. Pastikan server berjalan.</p>';
+            }
+        }
+
+        function renderRuntunList() {
+            runtunSavedListContainer.innerHTML = '';
+            if (runtunData.length === 0) {
+                runtunSavedListContainer.innerHTML = '<p style="text-align:center;color:#aaa;padding:30px">Belum ada data runtun waktu. Tambahkan data baru di form sebelah kiri.</p>';
+                return;
+            }
+            // Group by nama
+            const groups = {};
+            runtunData.forEach(item => {
+                if (!groups[item.nama]) groups[item.nama] = [];
+                groups[item.nama].push(item);
+            });
+            Object.entries(groups).forEach(([nama, records]) => {
+                const sorted = records.sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                const years = sorted.map(r => r.tahun);
+                const range = years.length > 1 ? `${years[0]} – ${years[years.length - 1]}` : years[0];
+                const latest = sorted[sorted.length - 1];
+                const el = document.createElement('div');
+                el.className = 'data-item';
+                el.innerHTML = `
+                    <div>
+                        <h4>${nama}</h4>
+                        <p>Periode: ${range} &nbsp;|&nbsp; ${records.length} tahun data</p>
+                        <span class="nilai-tag">Nilai Terakhir (${latest.tahun}): ${parseFloat(latest.nilai).toLocaleString('id-ID')}</span>
+                    </div>
+                    <div class="aksi">
+                        <button class="edit" onclick="editRuntunGroup('${nama}')">Edit</button>
+                        <button class="hapus" onclick="deleteRuntunGroup('${nama}')">Hapus</button>
+                    </div>`;
+                runtunSavedListContainer.appendChild(el);
+            });
+        }
+
+        saveRuntunBtn.addEventListener('click', async function () {
+            const nama = runtunNamaInput.value.trim();
+            const nilaiStr = runtunNilaiInput.value;
+            const editId = runtunEditId.value;
+            if (!nama) { showToast('error', 'Field Kosong', 'Masukkan nama indikator.'); return; }
+            if (!selectedRuntunTahun) { showToast('error', 'Tahun Belum Dipilih', 'Pilih tahun data terlebih dahulu.'); return; }
+            if (nilaiStr === '') { showToast('error', 'Field Kosong', 'Masukkan nilai data.'); return; }
+            const nilai = parseFloat(nilaiStr);
+            if (isNaN(nilai)) { showToast('error', 'Nilai Tidak Valid', 'Nilai harus berupa angka.'); return; }
+            try {
+                if (editId) {
+                    await fetch(`${API}/api/runtun/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nama, tahun: selectedRuntunTahun, nilai })
+                    });
+                    showToast('success', 'Data Diperbarui', `${nama} (${selectedRuntunTahun}) berhasil diperbarui.`);
+                } else {
+                    const existing = runtunData.find(r =>
+                        r.nama.toLowerCase() === nama.toLowerCase() && r.tahun === selectedRuntunTahun
+                    );
+                    if (existing) {
+                        await fetch(`${API}/api/runtun/${existing.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ nama, tahun: selectedRuntunTahun, nilai })
+                        });
+                        showToast('warning', 'Data Diperbarui', `${nama} (${selectedRuntunTahun}) sudah ada, nilai ditimpa.`);
+                    } else {
+                        await fetch(`${API}/api/runtun`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ nama, tahun: selectedRuntunTahun, nilai })
+                        });
+                        showToast('success', 'Data Ditambahkan', `${nama} (${selectedRuntunTahun}) berhasil disimpan.`);
+                    }
+                }
+                // Reset form
+                runtunNamaInput.value = '';
+                runtunNilaiInput.value = '';
+                runtunEditId.value = '';
+                runtunFormTitle.textContent = 'Input Data Baru';
+                saveRuntunBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
+                document.querySelectorAll('.runtun-tahun-btn').forEach(b => b.classList.remove('active'));
+                selectedRuntunTahun = null;
+                activeRuntunYears = [];
+                await loadRuntunData();
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
+        window.editRuntunGroup = async function (nama) {
+            const records = runtunData.filter(r => r.nama.toLowerCase() === nama.toLowerCase());
+            if (!records.length) return;
+            const sorted = records.sort((a, b) => parseInt(b.tahun) - parseInt(a.tahun));
+            const latest = sorted[0];
+            runtunNamaInput.value = latest.nama;
+            activeRuntunYears = records.map(r => parseInt(r.tahun));
+            renderRuntunYears();
+            selectedRuntunTahun = latest.tahun.toString();
+            updateRuntunFormFromSelection();
+            
+            const btn = runtunTahunListContainer.querySelector(`.runtun-tahun-btn[data-value="${selectedRuntunTahun}"]`);
+            if (btn) {
+                document.querySelectorAll('.runtun-tahun-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            
+            document.querySelector('.runtun-input-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            showToast('warning', 'Mode Edit', `Mengedit data "${nama}".`);
+        };
+
+        window.deleteRuntunGroup = async function (nama) {
+            if (!confirm(`Hapus semua data runtun waktu untuk "${nama}"?`)) return;
+            const ids = runtunData.filter(r => r.nama.toLowerCase() === nama.toLowerCase()).map(r => r.id);
+            try {
+                await Promise.all(ids.map(id => fetch(`${API}/api/runtun/${id}`, { method: 'DELETE' })));
+                showToast('error', 'Data Dihapus', `Semua data "${nama}" berhasil dihapus.`);
+                await loadRuntunData();
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat menghapus data.');
+            }
+        };
+
+        // ============================================================
+        // DATA KECAMATAN
+        // ============================================================
+        const filterKecTahun = document.getElementById('kec-filter-tahun');
+        const filterKecTema = document.getElementById('kec-filter-tema');
+        const filterKecVar = document.getElementById('kec-filter-variabel');
+        const btnDeleteKecVar = document.getElementById('btn-delete-kec-var');
+        const searchKecInput = document.getElementById('kec-table-search');
+        const tableBody = document.getElementById('kecamatan-table-body');
+        const thVarNama = document.getElementById('th-variabel-nama');
+        const tableTitle = document.getElementById('tabel-judul-kecamatan');
+        const inputKecTahun = document.getElementById('kec-input-tahun');
+        const inputKecTema = document.getElementById('kec-input-tema');
+        const inputKecVar = document.getElementById('kec-input-variabel');
+        const inputKecNilai = document.getElementById('kec-input-nilai');
+        const saveKecVarBtn = document.getElementById('btn-save-kec-var');
+        const addKecInputYearBtn = document.getElementById('btn-add-kec-input-tahun');
+        const btnAddKecTema = document.getElementById('btn-add-kec-tema');
+
+        let ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
+        let currentKecData = {};
+
+        function updateThemeSelects() {
+            const prevInputVal = inputKecTema.value;
+            const prevFilterVal = filterKecTema.value;
+            
+            inputKecTema.innerHTML = '<option value="" selected disabled>Pilih Tema</option>';
+            filterKecTema.innerHTML = '';
+            
+            ALL_THEMES.forEach(t => {
+                const opt1 = document.createElement('option');
+                opt1.value = t;
+                opt1.textContent = t;
+                inputKecTema.appendChild(opt1);
+                
+                const opt2 = document.createElement('option');
+                opt2.value = t;
+                opt2.textContent = t;
+                filterKecTema.appendChild(opt2);
+            });
+            
+            if (prevInputVal && ALL_THEMES.includes(prevInputVal)) {
+                inputKecTema.value = prevInputVal;
+            }
+            if (prevFilterVal && ALL_THEMES.includes(prevFilterVal)) {
+                filterKecTema.value = prevFilterVal;
+            } else if (ALL_THEMES.includes("Pertanian")) {
+                filterKecTema.value = "Pertanian";
+            }
+        }
+
+        async function updateKecVariables() {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            try {
+                const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                currentKecData = await res.json();
+            } catch (e) {
+                currentKecData = {};
+            }
+            
+            const varKeys = Object.keys(currentKecData);
+            const prevVal = filterKecVar.value;
+            
+            filterKecVar.innerHTML = '';
+            if (varKeys.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = "";
+                opt.textContent = "Tidak ada variabel";
+                opt.disabled = true;
+                opt.selected = true;
+                filterKecVar.appendChild(opt);
+            } else {
+                varKeys.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v;
+                    opt.textContent = v;
+                    filterKecVar.appendChild(opt);
+                });
+                
+                if (prevVal && varKeys.includes(prevVal)) {
+                    filterKecVar.value = prevVal;
+                } else {
+                    filterKecVar.value = varKeys[0];
+                }
+            }
+            
+            renderKecamatanTable();
+        }
+
+        async function renderKecamatanTable() {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            const varName = filterKecVar.value;
+            const search = (searchKecInput.value || '').toLowerCase();
+            
+            const hasData = varName && currentKecData[varName];
+            const values = hasData ? currentKecData[varName] : null;
+
+            thVarNama.textContent = hasData ? varName : 'Data';
+            tableTitle.textContent = hasData 
+                ? `Data ${tema} Tahun ${tahun} — ${varName}`
+                : `Data ${tema} Tahun ${tahun}`;
+
+            tableBody.innerHTML = '';
+            KECAMATAN_NAMES.forEach((kec, i) => {
+                if (search && !kec.toLowerCase().includes(search)) return;
+                const val = (values && Array.isArray(values)) ? values[i] : null;
+                const display = (val !== null && val !== undefined && val !== '-') ? parseFloat(val).toLocaleString('id-ID') : '-';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="text-align:center">${i + 1}</td><td>${kec}</td><td style="font-weight:700;color:var(--primary)">${display}</td>`;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        filterKecTahun.addEventListener('change', updateKecVariables);
+        filterKecTema.addEventListener('change', updateKecVariables);
+        filterKecVar.addEventListener('change', renderKecamatanTable);
+        searchKecInput.addEventListener('input', renderKecamatanTable);
+
+        async function initKecamatanYears() {
+            try {
+                const res = await fetch(`${API}/api/kecamatan/meta`);
+                const meta = await res.json();
+                const yearsFromDb = Object.keys(meta).map(Number);
+                
+                const defaultYears = [2024, 2025, 2026];
+                const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => b - a);
+                
+                // Tambah tema dari database jika belum ada di list default
+                Object.values(meta).forEach(temas => {
+                    temas.forEach(t => {
+                        if (!ALL_THEMES.includes(t)) {
+                            ALL_THEMES.push(t);
+                        }
+                    });
+                });
+                updateThemeSelects();
+
+                const prevInputVal = inputKecTahun.value;
+                inputKecTahun.innerHTML = '<option value="" selected disabled>Pilih Tahun</option>';
+                allYears.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    inputKecTahun.appendChild(opt);
+                });
+                if (prevInputVal) inputKecTahun.value = prevInputVal;
+
+                const prevFilterVal = filterKecTahun.value;
+                filterKecTahun.innerHTML = '';
+                allYears.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    filterKecTahun.appendChild(opt);
+                });
+                if (prevFilterVal && allYears.includes(Number(prevFilterVal))) {
+                    filterKecTahun.value = prevFilterVal;
+                } else {
+                    filterKecTahun.value = 2025;
+                }
+            } catch (e) {
+                console.error("Gagal memuat tahun kecamatan:", e);
+            }
+        }
+
+        addKecInputYearBtn.addEventListener('click', function () {
+            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):');
+            if (!yr) return;
+            const years = parseYears(yr);
+            if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
+            
+            years.forEach(y => {
+                [inputKecTahun, filterKecTahun].forEach(sel => {
+                    if (!sel.querySelector(`option[value="${y}"]`)) {
+                        const opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        sel.appendChild(opt);
+                    }
+                });
+            });
+            const lastYear = years[years.length - 1];
+            inputKecTahun.value = lastYear;
+            showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
+        });
+
+        btnAddKecTema.addEventListener('click', function () {
+            const newTema = prompt('Masukkan nama tema besar baru:');
+            if (!newTema) return;
+            const cleanTema = newTema.trim();
+            if (!cleanTema) return;
+            if (ALL_THEMES.map(t => t.toLowerCase()).includes(cleanTema.toLowerCase())) {
+                showToast('warning', 'Sudah Ada', `Tema "${cleanTema}" sudah terdaftar.`);
+                const exactMatch = ALL_THEMES.find(t => t.toLowerCase() === cleanTema.toLowerCase());
+                inputKecTema.value = exactMatch;
+                return;
+            }
+            ALL_THEMES.push(cleanTema);
+            updateThemeSelects();
+            inputKecTema.value = cleanTema;
+            showToast('success', 'Tema Ditambahkan', `Tema besar "${cleanTema}" berhasil ditambahkan.`);
+        });
+
+        btnDeleteKecVar.addEventListener('click', async function () {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            const variabel = filterKecVar.value;
+            if (!tahun || !tema || !variabel) {
+                showToast('error', 'Gagal', 'Pilih tahun, tema, dan variabel terlebih dahulu.');
+                return;
+            }
+            if (!confirm(`Hapus variabel "${variabel}" pada tema "${tema}" tahun ${tahun}?`)) return;
+            try {
+                const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}&variabel=${encodeURIComponent(variabel)}`, {
+                    method: 'DELETE'
+                });
+                if (res.ok) {
+                    showToast('error', 'Data Dihapus', `Variabel "${variabel}" berhasil dihapus.`);
+                    await initKecamatanYears();
+                    await updateKecVariables();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
+        saveKecVarBtn.addEventListener('click', async function () {
+            const tahun = inputKecTahun.value;
+            const tema = inputKecTema.value;
+            const variabel = inputKecVar.value.trim();
+            const raw = inputKecNilai.value.trim();
+            if (!tahun) { showToast('error', 'Gagal', 'Pilih tahun data.'); return; }
+            if (!tema) { showToast('error', 'Gagal', 'Pilih tema besar.'); return; }
+            if (!variabel) { showToast('error', 'Gagal', 'Isi nama variabel.'); return; }
+            if (!raw) { showToast('error', 'Gagal', 'Isi nilai data kecamatan.'); return; }
+
+            const parts = raw.split(';');
+            const nilai = [];
+            for (let i = 0; i < 24; i++) {
+                const s = i < parts.length ? parts[i].trim() : '';
+                if (s === '' || s === '-') nilai.push(null);
+                else { const n = parseFloat(s); nilai.push(isNaN(n) ? null : n); }
+            }
+            if (parts.length < 24) showToast('warning', 'Data Kurang', `Hanya ${parts.length} nilai. Sisanya diisi null.`);
+
+            try {
+                const res = await fetch(`${API}/api/kecamatan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tahun, tema, variabel, nilai })
+                });
+                if (res.ok) {
+                    showToast('success', 'Variabel Ditambahkan', `"${variabel}" berhasil disimpan untuk ${tema} ${tahun}.`);
+                    inputKecVar.value = '';
+                    inputKecNilai.value = '';
+                    await initKecamatanYears();
+                    filterKecTahun.value = tahun;
+                    filterKecTema.value = tema;
+                    await updateKecVariables();
+                    filterKecVar.value = variabel;
+                    renderKecamatanTable();
+                    document.querySelector('.tabel-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
+        // ============================================================
+        // INISIALISASI AWAL
+        // ============================================================
+        async function init() {
+            await initIndikatorYears();
+            await loadRuntunData();
+            await initKecamatanYears();
+            await updateKecVariables();
+        }
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Portal visualisasi data statistik Kabupaten Cilacap — indikator pembangunan, runtun waktu, peta kecamatan, dan analisis regresi berganda.">
+    <title>Cilacap Dalam Angka | Dashboard Statistik</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/user/style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Leaflet.js (Peta Interaktif) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Chart.js (Grafik) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Background Decoration -->
+    <div class="bg-circle bg1"></div>
+    <div class="bg-circle bg2"></div>
+
+    <!-- Floating Sea Bubbles Decoration -->
+    <div class="bubbles-container">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <header class="navbar">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    <img src="../logo_bps/logo%20bps.webp" alt="Logo BPS">
+                </div>
+
+                <div class="logo-text">
+                    <h2>Cilacap Dalam Angka</h2>
+                    <span>Portal Statistik BPS Kab. Cilacap</span>
+                </div>
+
+            </div>
+
+            <nav>
+
+                <a href="#home">Home</a>
+                <a href="#indikator">Indikator</a>
+                <a href="#runtunWaktu">Runtun Waktu</a>
+                <a href="#peta">Peta Statistik</a>
+                <a href="#regresi">Regresi</a>
+
+            </nav>
+
+        </header>
+
+        <!-- HERO -->
+        <section id="home" class="hero">
+
+
+            <h1>
+                <span class="blue">CILACAP</span><br>
+                <span class="green">DALAM</span>
+                <span class="orange">ANGKA</span>
+            </h1>
+
+            <p>
+                Portal visualisasi data statistik Kabupaten Cilacap yang menyajikan
+                berbagai indikator pembangunan daerah secara interaktif, informatif.
+            </p>
+
+            <div class="button-group">
+
+                <a href="https://cilacapkab.bps.go.id/id" class="btn btn-primary" target="_blank">
+                    <i class="fa-solid fa-chart-column"></i>
+                    Sumber Data
+                </a>
+
+
+            </div>
+
+            <!-- Dynamic Wave transition -->
+            <div class="sea-waves-container">
+                <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                    <defs>
+                        <path id="gentle-wave"
+                            d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z" />
+                    </defs>
+                    <g class="parallax">
+                        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(64, 162, 216, 0.25)" />
+                        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(245, 232, 199, 0.35)" />
+                        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255, 255, 255, 0.5)" />
+                        <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(250, 246, 237, 0.9)" />
+                    </g>
+                </svg>
+            </div>
+
+        </section>
+        <!-- INDIKATOR UTAMA -->
+        <section id="indikator" class="indicator-section">
+
+            <h2>Indikator Utama</h2>
+            <p
+                style="text-align:center;color:var(--ocean-medium);margin-top:-16px;margin-bottom:28px;font-size:0.97rem">
+                9 indikator pembangunan kunci Kabupaten Cilacap
+            </p>
+
+            <!-- Filter Tahun -->
+            <div
+                style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:32px;flex-wrap:wrap">
+                <label style="font-weight:600;color:var(--ocean-deep);font-size:0.95rem">
+                    <i class="fa-solid fa-calendar-days" style="margin-right:6px;color:var(--ocean-medium)"></i>Tahun
+                    Data:
+                </label>
+                <select id="ind-year-select"
+                    style="padding:8px 18px;border-radius:50px;border:1.5px solid rgba(11,96,176,0.25);background:rgba(255,255,255,0.85);font-family:inherit;font-size:0.92rem;font-weight:600;color:var(--ocean-deep);cursor:pointer;min-width:120px">
+                    <option value="">Pilih Tahun</option>
+                </select>
+                <div id="ind-loading" style="display:none;color:var(--ocean-medium);font-size:0.88rem">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Memuat...
+                </div>
+            </div>
+
+            <!-- 9 Kartu Indikator -->
+            <div class="menu-grid" id="indikator-grid">
+
+                <!-- Ind 1: Tingkat Kemiskinan -->
+                <div class="menu-card ind-card" id="card-ind1">
+                    <div class="icon red-bg">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3>Tingkat Kemiskinan</h3>
+                    <div class="ind-value" id="val-ind1">-</div>
+                    <span class="ind-unit">Persen (%)</span>
+                </div>
+
+                <!-- Ind 2: Tingkat Pengangguran -->
+                <div class="menu-card ind-card" id="card-ind2">
+                    <div class="icon orange-bg">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h3>Tingkat Pengangguran Terbuka</h3>
+                    <div class="ind-value" id="val-ind2">-</div>
+                    <span class="ind-unit">Persen (%)</span>
+                </div>
+
+                <!-- Ind 3: IPM -->
+                <div class="menu-card ind-card" id="card-ind3">
+                    <div class="icon blue-bg">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <h3>Indeks Pembangunan Manusia</h3>
+                    <div class="ind-value" id="val-ind3">-</div>
+                    <span class="ind-unit">Poin (0–100)</span>
+                </div>
+
+                <!-- Ind 4: Angka Harapan Hidup -->
+                <div class="menu-card ind-card" id="card-ind4">
+                    <div class="icon green-bg">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <h3>Angka Harapan Hidup</h3>
+                    <div class="ind-value" id="val-ind4">-</div>
+                    <span class="ind-unit">Tahun</span>
+                </div>
+
+                <!-- Ind 5: Rata-rata Lama Sekolah -->
+                <div class="menu-card ind-card" id="card-ind5">
+                    <div class="icon purple-bg">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3>Rata-rata Lama Sekolah</h3>
+                    <div class="ind-value" id="val-ind5">-</div>
+                    <span class="ind-unit">Tahun</span>
+                </div>
+
+                <!-- Ind 6: Harapan Lama Sekolah -->
+                <div class="menu-card ind-card" id="card-ind6">
+                    <div class="icon cyan-bg">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h3>Harapan Lama Sekolah</h3>
+                    <div class="ind-value" id="val-ind6">-</div>
+                    <span class="ind-unit">Tahun</span>
+                </div>
+
+                <!-- Ind 7: Pengeluaran Per Kapita -->
+                <div class="menu-card ind-card" id="card-ind7">
+                    <div class="icon yellow-bg">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <h3>Pengeluaran Per Kapita</h3>
+                    <div class="ind-value" id="val-ind7">-</div>
+                    <span class="ind-unit">Ribu Rp (Disesuaikan)</span>
+                </div>
+
+                <!-- Ind 8: Laju Pertumbuhan Ekonomi -->
+                <div class="menu-card ind-card" id="card-ind8">
+                    <div class="icon leaf-bg">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Laju Pertumbuhan Ekonomi</h3>
+                    <div class="ind-value" id="val-ind8">-</div>
+                    <span class="ind-unit">Persen (%)</span>
+                </div>
+
+                <!-- Ind 9: Kepadatan Penduduk -->
+                <div class="menu-card ind-card" id="card-ind9">
+                    <div class="icon darkblue-bg">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3>Kepadatan Penduduk</h3>
+                    <div class="ind-value" id="val-ind9">-</div>
+                    <span class="ind-unit">Jiwa/km²</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===================== DATA RUNTUN WAKTU ===================== -->
+        <section id="runtunWaktu" class="time-series-section">
+
+            <!-- Judul -->
+            <div class="section-title">
+
+                <h2>Visualisasi Runtun Waktu</h2>
+
+                <p>
+                    Visualisasi perkembangan indikator berdasarkan periode waktu
+                    yang tersedia pada dataset.
+                </p>
+
+            </div>
+
+            <!-- Filter -->
+            <div class="time-filter">
+                <select id="tsVariable" size="5">
+                    <option selected disabled>Pilih Variabel</option>
+                </select>
+            </div>
+
+            <!-- Card -->
+            <div class="time-series-card">
+
+                <div class="chart-header">
+
+                    <div class="chart-title">
+
+                        <h3>Grafik Tren Tahunan</h3>
+
+                        <span id="yearRange">
+                            Periode -
+                        </span>
+
+                    </div>
+
+                    <div class="chart-info">
+
+                        <div class="info-item">
+                            <span>Jumlah Tahun</span>
+                            <strong id="totalYear">-</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Nilai Maksimum</span>
+                            <strong id="maxValue">-</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Nilai Minimum</span>
+                            <strong id="minValue">-</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="timeSeriesChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+        <!-- ========================================= -->
+        <!-- PETA STATISTIK -->
+        <!-- ========================================= -->
+
+        <section id="peta" class="map-section">
+
+            <div class="section-header">
+
+                <h2>Peta Statistik Kabupaten Cilacap</h2>
+
+                <p>
+                    Pilih tema, indikator, dan tahun untuk melihat persebaran data
+                    statistik tingkat kecamatan di Kabupaten Cilacap.
+                </p>
+
+            </div>
+
+            <div class="map-layout">
+
+                <!-- PANEL FILTER -->
+
+                <aside class="filter-panel">
+
+                    <h3>Filter Data</h3>
+
+                    <div class="form-group">
+                        <label>Tahun</label>
+                        <select id="map-filter-tahun">
+                            <option value="">Pilih Tahun</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tema</label>
+                        <select id="map-filter-tema">
+                            <option value="">Pilih Tema</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Variabel</label>
+                        <select id="map-filter-variabel">
+                            <option value="">Pilih Variabel</option>
+                        </select>
+                    </div>
+
+                    <button class="filter-btn" id="filter-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Tampilkan Data
+                    </button>
+
+                    <!-- Legend -->
+                    <div id="map-legend" style="margin-top:16px;display:none">
+                        <p style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--ocean-deep)">Legenda</p>
+                        <div id="legend-scale"
+                            style="height:14px;border-radius:6px;background:linear-gradient(to right, #FFF59D, #FFB74D, #FF5722, #D32F2F, #6B0000);margin-bottom:4px;border:1px solid rgba(0,0,0,0.15)">
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:11px;color:#666">
+                            <span id="legend-min">Min</span>
+                            <span id="legend-max">Maks</span>
+                        </div>
+                    </div>
+
+                </aside>
+
+                <!-- PETA LEAFLET -->
+
+                <div class="map-container">
+                    <div id="cilacap-map" style="height:550px;width:100%;border-radius:18px;z-index:1"></div>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- ========================================= -->
+        <!-- ANALISIS REGRESI BERGANDA -->
+        <!-- ========================================= -->
+
+        <section id="regresi" class="regression-section">
+
+            <div class="section-header">
+
+                <h2>Analisis Regresi Berganda</h2>
+
+                <p>
+                    Pilih satu variabel terikat (Y) dan satu atau lebih variabel bebas (X)
+                    untuk membentuk model regresi berganda.
+                </p>
+
+            </div>
+
+            <div class="regression-layout">
+
+                <!-- ========================= -->
+                <!-- PANEL INPUT -->
+                <!-- ========================= -->
+
+                <aside class="regression-sidebar">
+
+                    <h3>Variabel Terikat (Y)</h3>
+
+                    <div class="form-group">
+                        <label>Tahun</label>
+                        <select id="reg-y-tahun">
+                            <option value="">Pilih Tahun</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tema</label>
+                        <select id="reg-y-tema">
+                            <option value="">Pilih Tema</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Variabel (Y)</label>
+                        <select id="reg-y-data">
+                            <option value="">Pilih Variabel</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <h3>Variabel Bebas (X)</h3>
+
+                    <div id="x-variables-container">
+                        <!-- X variables added dynamically -->
+                    </div>
+
+                    <button class="add-variable" id="btn-add-x">
+                        <i class="fa-solid fa-plus"></i>
+                        Tambah Variabel X
+                    </button>
+
+                    <button class="analysis-btn" id="btn-run-regression">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Jalankan Analisis
+                    </button>
+
+                </aside>
+
+                <!-- ========================= -->
+                <!-- HASIL -->
+                <!-- ========================= -->
+
+                <div class="regression-result">
+
+                    <!-- Ringkasan Model -->
+
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h4>R²</h4>
+                            <span id="result-r2">-</span>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Adjusted R²</h4>
+                            <span id="result-adj-r2">-</span>
+                        </div>
+                        <div class="summary-card">
+                            <h4>RMSE</h4>
+                            <span id="result-rmse">-</span>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Prob(F)</h4>
+                            <span id="result-prob-f">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Persamaan Model -->
+
+                    <div class="model-box">
+                        <h3>Persamaan Model</h3>
+                        <div class="equation" id="result-equation">
+                            Pilih variabel dan jalankan analisis untuk melihat persamaan regresi.
+                        </div>
+                    </div>
+
+                    <!-- Scatter Plot -->
+
+                    <div class="chart-box">
+                        <h3>Scatter Plot Aktual vs Prediksi</h3>
+                        <div style="position:relative;height:380px">
+                            <canvas id="scatter-chart"></canvas>
+                            <div id="scatter-placeholder"
+                                style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#aaa">
+                                <i class="fa-solid fa-chart-scatter" style="font-size:40px;margin-bottom:12px"></i>
+                                <p>Grafik akan muncul setelah analisis dijalankan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Koefisien Regresi -->
+
+                    <div class="result-table">
+                        <h3>Koefisien Regresi</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variabel</th>
+                                    <th>Koefisien</th>
+                                    <th>Std Error</th>
+                                    <th>t-statistik</th>
+                                    <th>p-value</th>
+                                    <th>Sig.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-tbody">
+                                <tr>
+                                    <td colspan="6" style="text-align:center;color:#aaa;padding:20px">
+                                        Hasil regresi akan ditampilkan di sini setelah analisis dijalankan.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT FUNGSIONAL                                        -->
+    <!-- ============================================================ -->
+    <script>
+        const API = ''; // Sama-origin: http://localhost:5000
+
+        const KECAMATAN_NAMES = [
+            "Dayeuhluhur", "Wanareja", "Majenang", "Cimanggu", "Karangpucung",
+            "Cipari", "Sidareja", "Kedungreja", "Patimuan", "Gandrungmangu",
+            "Bantarsari", "Kawunganten", "Kampung Laut", "Jeruklegi", "Kesugihan",
+            "Adipala", "Maos", "Sampang", "Kroya", "Binangun",
+            "Nusawungu", "Cilacap Selatan", "Cilacap Tengah", "Cilacap Utara"
+        ];
+
+        let timeSeriesChart = null;
+        let scatterChart = null;
+        let cilacapMap = null;
+        let geojsonLayer = null;
+        let kecamatanMeta = {};
+        let xVarCount = 0;
+
+        // ============================================================
+        // INDIKATOR UTAMA — Load from API
+        // ============================================================
+        async function initIndikator() {
+            const yearSelect = document.getElementById('ind-year-select');
+            const loadingIndicator = document.getElementById('ind-loading');
+            if (!yearSelect) return;
+
+            try {
+                if (loadingIndicator) loadingIndicator.style.display = 'inline-block';
+
+                // Fetch all indicators
+                const res = await fetch(`${API}/api/indikator`);
+                const allData = await res.json();
+
+                const years = Object.keys(allData).sort((a, b) => parseInt(b) - parseInt(a));
+
+                if (years.length === 0) {
+                    yearSelect.innerHTML = '<option value="">Tidak ada data</option>';
+                    if (loadingIndicator) loadingIndicator.style.display = 'none';
+                    return;
+                }
+
+                // Populate select option
+                yearSelect.innerHTML = '';
+                years.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    yearSelect.appendChild(opt);
+                });
+
+                // Display function
+                const displayDataForYear = (year) => {
+                    const yearData = allData[year] || {};
+                    for (let i = 1; i <= 9; i++) {
+                        const valEl = document.getElementById(`val-ind${i}`);
+                        if (!valEl) continue;
+
+                        // Remove previous animation classes
+                        valEl.classList.remove('animate-in', 'no-data', 'has-data');
+
+                        const val = yearData[`ind${i}`];
+                        if (val === null || val === undefined || val === '') {
+                            valEl.textContent = '-';
+                            valEl.classList.add('no-data');
+                        } else {
+                            valEl.textContent = parseFloat(val).toLocaleString('id-ID');
+                            valEl.classList.add('has-data');
+                            // Trigger reflow for animation
+                            void valEl.offsetWidth;
+                            valEl.classList.add('animate-in');
+                        }
+                    }
+                };
+
+                // Listen change
+                yearSelect.addEventListener('change', function () {
+                    displayDataForYear(this.value);
+                });
+
+                // Initial load with latest year
+                yearSelect.value = years[0];
+                displayDataForYear(years[0]);
+
+            } catch (e) {
+                console.error("Gagal memuat indikator:", e);
+                yearSelect.innerHTML = '<option value="">Gagal memuat data</option>';
+            } finally {
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // RUNTUN WAKTU — Chart.js
+        // ============================================================
+        async function initTimeSeries() {
+            const select = document.getElementById('tsVariable');
+            try {
+                const res = await fetch(`${API}/api/runtun`);
+                const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) {
+                    select.innerHTML = '<option value="">Belum ada data runtun waktu</option>';
+                    return;
+                }
+                const names = [...new Set(data.map(d => d.nama))].sort();
+                select.innerHTML = '';
+                names.forEach((name, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = name; opt.textContent = name;
+                    if (idx === 0) opt.selected = true;
+                    select.appendChild(opt);
+                });
+                select.addEventListener('change', function () {
+                    const filtered = data.filter(d => d.nama === this.value)
+                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                    renderTimeSeriesChart(filtered, this.value);
+                });
+                if (names.length > 0) {
+                    const filtered = data.filter(d => d.nama === names[0])
+                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                    renderTimeSeriesChart(filtered, names[0]);
+                }
+            } catch (e) {
+                select.innerHTML = '<option>Gagal memuat data — pastikan server berjalan</option>';
+            }
+        }
+
+        function renderTimeSeriesChart(data, varName) {
+            const years = data.map(d => d.tahun);
+            const values = data.map(d => parseFloat(d.nilai));
+
+            document.getElementById('yearRange').textContent =
+                years.length > 0 ? `Periode ${years[0]} – ${years[years.length - 1]}` : '-';
+            document.getElementById('totalYear').textContent = years.length;
+            document.getElementById('maxValue').textContent =
+                values.length > 0 ? Math.max(...values).toLocaleString('id-ID') : '-';
+            document.getElementById('minValue').textContent =
+                values.length > 0 ? Math.min(...values).toLocaleString('id-ID') : '-';
+
+            const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+            if (timeSeriesChart) timeSeriesChart.destroy();
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(242, 101, 34, 0.35)');
+            gradient.addColorStop(1, 'rgba(242, 101, 34, 0.01)');
+
+            timeSeriesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: varName,
+                        data: values,
+                        borderColor: '#F26522',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 10,
+                        pointBackgroundColor: '#F26522',
+                        pointHoverBackgroundColor: '#D94E0F',
+                        pointBorderColor: '#FFFFFF',
+                        pointBorderWidth: 2.5,
+                        tension: 0.35,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                            titleFont: { family: 'Poppins', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Poppins', size: 13 },
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            ticks: { font: { family: 'Poppins', weight: '600' } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            beginAtZero: false,
+                            ticks: { font: { family: 'Poppins', weight: '600' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // PETA LEAFLET — Choropleth
+        // ============================================================
+        async function initMap() {
+            cilacapMap = L.map('cilacap-map', {
+                center: [-7.6, 108.9],
+                zoom: 10,
+                zoomControl: false,
+                dragging: false,
+                touchZoom: false,
+                doubleClickZoom: false,
+                scrollWheelZoom: false,
+                boxZoom: false,
+                keyboard: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+                maxZoom: 18
+            }).addTo(cilacapMap);
+
+            try {
+                const res = await fetch(`${API}/api/geojson`);
+                if (!res.ok) throw new Error('GeoJSON not found');
+                const geojson = await res.json();
+
+                const defaultStyle = {
+                    fillColor: '#FFF3C4',
+                    weight: 2, opacity: 0.95,
+                    color: '#1E293B', fillOpacity: 0.65
+                };
+
+                geojsonLayer = L.geoJSON(geojson, {
+                    style: () => defaultStyle,
+                    onEachFeature: (feature, layer) => {
+                        layer.baseStyle = { ...defaultStyle };
+                        const nama = feature.properties.NAMA_KECAMATAN ||
+                            feature.properties.KECAMATAN || feature.properties.name || 'Kecamatan';
+                        layer.bindTooltip(`<strong>${nama}</strong>`, { sticky: true });
+                        layer.on({ mouseover: highlightFeature, mouseout: resetHighlight });
+                    }
+                }).addTo(cilacapMap);
+
+                cilacapMap.fitBounds(geojsonLayer.getBounds());
+            } catch (e) {
+                document.getElementById('cilacap-map').innerHTML =
+                    `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    height:100%;gap:12px;color:#888;background:rgba(245,232,199,0.3);border-radius:18px">
+                    <i class='fa-solid fa-map-location-dot' style='font-size:50px;color:#40A2D8'></i>
+                    <h3>Peta Belum Tersedia</h3>
+                    <p style='text-align:center;max-width:300px'>Jalankan: <code>python backend/shp_to_geojson.py</code><br>untuk menghasilkan file GeoJSON peta kecamatan.</p></div>`;
+            }
+
+            await loadMapFilters();
+        }
+
+        function highlightFeature(e) {
+            const layer = e.target;
+            layer.setStyle({
+                weight: 3.5,
+                color: '#FFEA00',
+                fillOpacity: 0.95
+            });
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+        }
+        function resetHighlight(e) {
+            const layer = e.target;
+            if (layer.baseStyle) {
+                layer.setStyle(layer.baseStyle);
+            } else if (geojsonLayer) {
+                geojsonLayer.resetStyle(layer);
+            }
+        }
+
+        async function loadMapFilters() {
+            try {
+                const res = await fetch(`${API}/api/kecamatan/meta`);
+                kecamatanMeta = await res.json();
+                const tahunSel = document.getElementById('map-filter-tahun');
+                const temaSel = document.getElementById('map-filter-tema');
+                const varSel = document.getElementById('map-filter-variabel');
+
+                const tahuns = Object.keys(kecamatanMeta).sort().reverse();
+                tahunSel.innerHTML = '<option value="">Pilih Tahun</option>';
+                tahuns.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; tahunSel.appendChild(o); });
+
+                tahunSel.addEventListener('change', function () {
+                    const temas = kecamatanMeta[this.value] || [];
+                    temaSel.innerHTML = '<option value="">Pilih Tema</option>';
+                    temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; temaSel.appendChild(o); });
+                    varSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                });
+
+                temaSel.addEventListener('change', async function () {
+                    const tahun = tahunSel.value, tema = this.value;
+                    if (!tahun || !tema) return;
+                    const r = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                    const d = await r.json();
+                    varSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                    Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; varSel.appendChild(o); });
+                });
+            } catch (e) { console.log('Map meta load failed:', e); }
+        }
+
+        document.getElementById('filter-btn')?.addEventListener('click', async function () {
+            const tahun = document.getElementById('map-filter-tahun').value;
+            const tema = document.getElementById('map-filter-tema').value;
+            const variabel = document.getElementById('map-filter-variabel').value;
+            if (!tahun || !tema || !variabel) { alert('Pilih tahun, tema, dan variabel terlebih dahulu.'); return; }
+
+            try {
+                const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                const data = await res.json();
+                const values = data[variabel];
+                if (!values) { alert('Data variabel tidak ditemukan.'); return; }
+
+                const nums = values.filter(v => v !== null && typeof v === 'number');
+                if (nums.length === 0) { alert('Tidak ada data numerik valid.'); return; }
+                const minV = Math.min(...nums), maxV = Math.max(...nums);
+
+                function getColor(val) {
+                    if (val === null || val === undefined) return '#E2E8F0';
+                    if (maxV === minV) return '#FF5722';
+                    const t = Math.max(0, Math.min(1, (val - minV) / (maxV - minV)));
+
+                    const stops = [
+                        { r: 255, g: 245, b: 157 }, // 0.00: Light Yellow
+                        { r: 255, g: 183, b: 77 },  // 0.25: Amber Orange
+                        { r: 255, g: 87, b: 34 },  // 0.50: Vivid Red-Orange
+                        { r: 211, g: 47, b: 47 },  // 0.75: Deep Red
+                        { r: 107, g: 0, b: 0 }    // 1.00: Dark Burgundy Red
+                    ];
+
+                    const scaled = t * (stops.length - 1);
+                    const i = Math.floor(scaled);
+                    const f = scaled - i;
+
+                    if (i >= stops.length - 1) {
+                        const s = stops[stops.length - 1];
+                        return `rgb(${s.r},${s.g},${s.b})`;
+                    }
+
+                    const c1 = stops[i];
+                    const c2 = stops[i + 1];
+                    const r = Math.round(c1.r + (c2.r - c1.r) * f);
+                    const g = Math.round(c1.g + (c2.g - c1.g) * f);
+                    const b = Math.round(c1.b + (c2.b - c1.b) * f);
+                    return `rgb(${r},${g},${b})`;
+                }
+
+                if (geojsonLayer) {
+                    geojsonLayer.eachLayer(layer => {
+                        const feature = layer.feature;
+                        const kecName = (feature.properties.NAMA_KECAMATAN ||
+                            feature.properties.KECAMATAN || feature.properties.name || '').toLowerCase();
+                        const idx = KECAMATAN_NAMES.findIndex(k =>
+                            kecName.includes(k.toLowerCase()) || k.toLowerCase().includes(kecName)
+                        );
+                        const val = idx >= 0 ? values[idx] : null;
+
+                        const newStyle = {
+                            fillColor: getColor(val),
+                            weight: 2,
+                            color: '#1E293B',
+                            opacity: 0.95,
+                            fillOpacity: 0.85
+                        };
+
+                        layer.baseStyle = newStyle;
+                        layer.setStyle(newStyle);
+
+                        const displayName = feature.properties.NAMA_KECAMATAN ||
+                            feature.properties.KECAMATAN || 'Kecamatan';
+                        layer.bindTooltip(
+                            `<strong>${displayName}</strong><br>${variabel}: <b>${val !== null ? val.toLocaleString('id-ID') : 'N/A'}</b>`,
+                            { sticky: true }
+                        );
+                    });
+                }
+
+                // Tampilkan legenda
+                document.getElementById('legend-min').textContent = minV.toLocaleString('id-ID');
+                document.getElementById('legend-max').textContent = maxV.toLocaleString('id-ID');
+                document.getElementById('map-legend').style.display = 'block';
+
+            } catch (e) { alert('Gagal memuat data peta. Pastikan server berjalan.'); }
+        });
+
+        // ============================================================
+        // REGRESI BERGANDA
+        // ============================================================
+        async function loadRegressionDropdowns() {
+            try {
+                const res = await fetch(`${API}/api/kecamatan/meta`);
+                const meta = await res.json();
+                const tahuns = Object.keys(meta).sort().reverse();
+
+                // Isi Y tahun
+                const yTahunSel = document.getElementById('reg-y-tahun');
+                const yTemaSel = document.getElementById('reg-y-tema');
+                const yDataSel = document.getElementById('reg-y-data');
+                tahuns.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; yTahunSel.appendChild(o); });
+
+                yTahunSel.addEventListener('change', function () {
+                    const temas = meta[this.value] || [];
+                    yTemaSel.innerHTML = '<option value="">Pilih Tema</option>';
+                    temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; yTemaSel.appendChild(o); });
+                    yDataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                });
+                yTemaSel.addEventListener('change', async function () {
+                    const tahun = yTahunSel.value, tema = this.value;
+                    if (!tahun || !tema) return;
+                    const r = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                    const d = await r.json();
+                    yDataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                    Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; yDataSel.appendChild(o); });
+                });
+
+                // Tambah X pertama otomatis
+                addXVariable(meta, tahuns);
+            } catch (e) { console.log('Regression meta failed:', e); }
+        }
+
+        function addXVariable(meta, tahuns) {
+            xVarCount++;
+            const container = document.getElementById('x-variables-container');
+            const div = document.createElement('div');
+            div.className = 'x-variable';
+            div.dataset.xid = xVarCount;
+            div.innerHTML = `
+                <div class="variable-title">
+                    <span>X${xVarCount}</span>
+                    <button type="button" class="remove-variable" onclick="removeXVar(this)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Tahun</label>
+                    <select class="x-var-tahun">
+                        <option value="">Pilih Tahun</option>
+                        ${tahuns.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tema</label>
+                    <select class="x-var-tema"><option value="">Pilih Tema</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Variabel</label>
+                    <select class="x-var-data"><option value="">Pilih Variabel</option></select>
+                </div>`;
+            container.appendChild(div);
+
+            const tahunSel = div.querySelector('.x-var-tahun');
+            const temaSel = div.querySelector('.x-var-tema');
+            const dataSel = div.querySelector('.x-var-data');
+
+            tahunSel.addEventListener('change', function () {
+                const temas = meta[this.value] || [];
+                temaSel.innerHTML = '<option value="">Pilih Tema</option>';
+                temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; temaSel.appendChild(o); });
+                dataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+            });
+            temaSel.addEventListener('change', async function () {
+                const tahun = tahunSel.value, tema = this.value;
+                if (!tahun || !tema) return;
+                const r = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                const d = await r.json();
+                dataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; dataSel.appendChild(o); });
+            });
+        }
+
+        window.removeXVar = function (btn) {
+            btn.closest('.x-variable').remove();
+        };
+
+        document.getElementById('btn-add-x')?.addEventListener('click', async function () {
+            const res = await fetch(`${API}/api/kecamatan/meta`);
+            const meta = await res.json();
+            const tahuns = Object.keys(meta).sort().reverse();
+            addXVariable(meta, tahuns);
+        });
+
+        document.getElementById('btn-run-regression')?.addEventListener('click', async function () {
+            const yTahun = document.getElementById('reg-y-tahun').value;
+            const yTema = document.getElementById('reg-y-tema').value;
+            const yData = document.getElementById('reg-y-data').value;
+            if (!yTahun || !yTema || !yData) { alert('Lengkapi pemilihan variabel Y (Tahun, Tema, Variabel).'); return; }
+
+            const xList = [];
+            document.querySelectorAll('#x-variables-container .x-variable').forEach(xvar => {
+                const tahun = xvar.querySelector('.x-var-tahun')?.value;
+                const tema = xvar.querySelector('.x-var-tema')?.value;
+                const variabel = xvar.querySelector('.x-var-data')?.value;
+                if (tahun && tema && variabel) xList.push({ tahun, tema, variabel });
+            });
+            if (xList.length === 0) { alert('Tambahkan minimal satu variabel X yang sudah terisi.'); return; }
+
+            this.textContent = '⏳ Menghitung...';
+            this.disabled = true;
+
+            try {
+                const res = await fetch(`${API}/api/regresi`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ y: { tahun: yTahun, tema: yTema, variabel: yData }, x: xList })
+                });
+                const result = await res.json();
+
+                if (result.error) { alert(`Kesalahan: ${result.error}`); return; }
+
+                document.getElementById('result-r2').textContent = result.r2;
+                document.getElementById('result-adj-r2').textContent = result.adj_r2;
+                document.getElementById('result-rmse').textContent = result.rmse;
+                document.getElementById('result-prob-f').textContent = result.prob_f;
+                document.getElementById('result-equation').textContent = result.persamaan;
+
+                const tbody = document.getElementById('result-tbody');
+                tbody.innerHTML = '';
+                result.koefisien.forEach(c => {
+                    const pClass = c.p_value < 0.05 ? 'color:#27ae60;font-weight:700' : 'color:#e74c3c';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${c.variabel}</td><td>${c.koefisien}</td><td>${c.std_error}</td><td>${c.t_stat}</td><td style="${pClass}">${c.p_value}</td><td>${c.signif}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                renderScatterChart(result.scatter, yData);
+
+            } catch (e) {
+                alert('Gagal menjalankan analisis. Pastikan server Python dan library statsmodels sudah terinstal.');
+            } finally {
+                this.innerHTML = '<i class="fa-solid fa-chart-line"></i> Jalankan Analisis';
+                this.disabled = false;
+            }
+        });
+
+        function renderScatterChart(scatter, yName) {
+            const placeholder = document.getElementById('scatter-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
+
+            const ctx = document.getElementById('scatter-chart').getContext('2d');
+            if (scatterChart) scatterChart.destroy();
+
+            const pts = scatter.map(d => ({ x: d.aktual, y: d.prediksi, label: d.kecamatan }));
+            const vals = scatter.flatMap(d => [d.aktual, d.prediksi]);
+            const minV = Math.min(...vals), maxV = Math.max(...vals);
+
+            scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Aktual vs Prediksi',
+                            data: pts,
+                            backgroundColor: 'rgba(11, 96, 176, 0.65)',
+                            pointRadius: 7,
+                            pointHoverRadius: 10
+                        },
+                        {
+                            label: 'Garis Ideal (y=x)',
+                            data: [{ x: minV, y: minV }, { x: maxV, y: maxV }],
+                            type: 'line',
+                            borderColor: '#F26522',
+                            borderWidth: 2,
+                            borderDash: [6, 3],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const d = ctx.raw;
+                                    if (!d.label) return `(${d.x?.toFixed(2)}, ${d.y?.toFixed(2)})`;
+                                    return `${d.label} — Aktual: ${d.x.toFixed(2)}, Prediksi: ${d.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: `Nilai Aktual (${yName})` } },
+                        y: { title: { display: true, text: 'Nilai Prediksi' } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // NAVBAR ACTIVE LINK (Scroll)
+        // ============================================================
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a');
+            let current = '';
+            sections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 100) current = sec.getAttribute('id');
+            });
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href') === `#${current}`) a.classList.add('active');
+            });
+        }
+        window.addEventListener('scroll', updateActiveNav);
+
+        // ============================================================
+        // INISIALISASI
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', async function () {
+            await initIndikator();
+            await initTimeSeries();
+            await initMap();
+            await loadRegressionDropdowns();
+        });
+    </script>
+
+</body>
+
+</html>

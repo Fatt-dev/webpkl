@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+    <title>CilacapFix</title>
+    <layers>
+        <layer>
+            <datasource>
+                <type>ESRI Shapefile</type>
+                <path>CilacapFix.shp</path>
+            </datasource>
+            <layername>CilacapFix</layername>
+            <title/>
+            <variable_order>
+                <time_ids>
+                    <id>time 0</id>
+                </time_ids>
+                <var>NAMOBJ</var>
+                <var>POLY_ID</var>
+                <var>
+                    TBC
+                    <displayed_decimals>6</displayed_decimals>
+                </var>
+                <var>
+                    AIRCEMAR
+                    <displayed_decimals>6</displayed_decimals>
+                </var>
+                <var>
+                    PENYAKIT
+                    <displayed_decimals>6</displayed_decimals>
+                </var>
+                <var>
+                    Producefih
+                    <displayed_decimals>6</displayed_decimals>
+                </var>
+                <var>
+                    Ikan
+                    <displayed_decimals>6</displayed_decimals>
+                </var>
+            </variable_order>
+            <custom_classifications/>
+            <weights_entries>
+                <weights>
+                    <title>CilacapFix</title>
+                    <default/>
+                    <meta_info>
+                        <weights_type>custom</weights_type>
+                        <path>CilacapFix.gal</path>
+                        <id_variable>POLY_ID</id_variable>
+                        <symmetry>unknown</symmetry>
+                        <num_observations>24</num_observations>
+                        <min_neighbors>2</min_neighbors>
+                        <max_neighbors>6</max_neighbors>
+                        <mean_neighbors>4</mean_neighbors>
+                        <median_neighbors>4</median_neighbors>
+                        <non_zero_perc>16.666666666666668</non_zero_perc>
+                    </meta_info>
+                </weights>
+            </weights_entries>
+            <default_vars>
+                <default_var>
+                    <name>Producefih</name>
+                    <time_id>time 0</time_id>
+                </default_var>
+                <default_var>
+                    <name/>
+                    <time_id>time 0</time_id>
+                </default_var>
+                <default_var>
+                    <name/>
+                    <time_id>time 0</time_id>
+                </default_var>
+                <default_var>
+                    <name/>
+                    <time_id>time 0</time_id>
+                </default_var>
+            </default_vars>
+        </layer>
+    </layers>
+</project>
