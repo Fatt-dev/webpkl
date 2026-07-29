@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin BPS Kabupaten Cilacap</title>
+    <link rel="icon" type="image/webp" href="/logo_bps/logo%20bps.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url('../wallpaper/background_1.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Overlay gelap */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(4, 50, 95, 0.75) 0%,
+                    rgba(0, 124, 192, 0.55) 50%,
+                    rgba(4, 50, 95, 0.8) 100%);
+            z-index: 0;
+        }
+
+        /* Dekorasi bulat belakang */
+        .deco {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .deco-1 {
+            width: 500px;
+            height: 500px;
+            background: #007CC0;
+            top: -150px;
+            right: -100px;
+        }
+
+        .deco-2 {
+            width: 400px;
+            height: 400px;
+            background: #04325F;
+            bottom: -100px;
+            left: -120px;
+        }
+
+        .deco-3 {
+            width: 300px;
+            height: 300px;
+            background: #F26522;
+            bottom: 100px;
+            right: 50px;
+            opacity: 0.12;
+        }
+
+        /* Card Login */
+        .login-card {
+            position: relative;
+            z-index: 1;
+            width: 420px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 48px 44px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            animation: slideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Card */
+        .login-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .login-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        .login-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .login-header p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin-bottom: 28px;
+        }
+
+        /* Form */
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-wrapper .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .input-wrapper .toggle-pass {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .input-wrapper .toggle-pass:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .password-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 48px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0;
+            font-weight: 400;
+        }
+
+        .password-input:focus {
+            border-color: rgba(0, 124, 192, 0.7);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(0, 124, 192, 0.15);
+        }
+
+        /* Error */
+        .error-msg {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 13px;
+            color: #FCA5A5;
+            font-weight: 500;
+            margin-bottom: 20px;
+            animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px);
+            }
+
+            40% {
+                transform: translateX(8px);
+            }
+
+            60% {
+                transform: translateX(-5px);
+            }
+
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Tombol Login */
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #007CC0, #04325F);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(0, 124, 192, 0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0, 124, 192, 0.5);
+            background: linear-gradient(135deg, #0090DC, #054A8C);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer kecil */
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="deco deco-3"></div>
+
+    <div class="login-card">
+        <div class="login-header">
+            <img src="/logo_bps/logo%20bps.webp" alt="Logo BPS" class="login-logo">
+            <h1>Admin Dashboard</h1>
+            <p>BPS Kabupaten Cilacap <br> Masukkan password untuk melanjutkan</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Pesan error dari server (ditampilkan via URL param) -->
+        <div id="error-container"></div>
+
+        <form method="POST" action="/admin/login">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="password" name="password" class="password-input"
+                    placeholder="Masukkan password" autocomplete="current-password" required autofocus>
+                <button type="button" class="toggle-pass" onclick="togglePassword()" id="toggleBtn">
+                    <i class="fa-regular fa-eye" id="toggleIcon"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="login-btn">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Masuk ke Dashboard
+            </button>
+        </form>
+
+        <div class="login-footer">
+            Sistem Informasi Statistik Kabupaten Cilacap &copy; 2025
+        </div>
+    </div>
+
+    <script>
+        // Tampilkan error dari URL query param ?error=1
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === '1') {
+            const container = document.getElementById('error-container');
+            container.innerHTML = `
+                <div class="error-msg">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    Password salah. Silakan coba lagi.
+                </div>`;
+        }
+
+        // Toggle show/hide password
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-regular fa-eye';
+            }
+        }
+
+        // Enter key submit
+        document.getElementById('password').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') e.target.closest('form').submit();
+        });
+    </script>
+</body>
+
+</html>

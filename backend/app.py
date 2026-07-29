@@ -7,7 +7,7 @@ Server tersedia di: http://localhost:5000
 import os
 import json
 import uuid
-from flask import Flask, send_from_directory, request, jsonify, abort
+from flask import Flask, send_from_directory, request, jsonify, abort, session, redirect, url_for, render_template_string
 from flask_cors import CORS
 
 # ─────────────────────────────────────────────
@@ -25,6 +25,12 @@ GEOJSON_PATH = os.path.join(USER_DIR, 'cilacap.geojson')
 # ─────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)  # Izinkan semua origin (untuk development)
+
+# Secret key untuk enkripsi session cookie
+app.secret_key = os.environ.get('SECRET_KEY', 'cda-bps-cilacap-secret-2024-xk9')
+
+# Password admin dari environment variable Railway
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
 
 # ─────────────────────────────────────────────
@@ -54,9 +60,32 @@ def user_page():
     return send_from_directory(USER_DIR, 'index.html')
 
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form.get('password', '')
+        if password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect('/admin')
+        else:
+            return redirect('/admin/login?error=1')
+    # Kalau sudah login, langsung ke admin
+    if session.get('admin_logged_in'):
+        return redirect('/admin')
+    return send_from_directory(ADMIN_DIR, 'login.html')
+
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    return redirect('/admin/login')
+
+
 @app.route('/admin/')
 @app.route('/admin')
 def admin_page():
+    if not session.get('admin_logged_in'):
+        return redirect('/admin/login')
     return send_from_directory(ADMIN_DIR, 'index.html')
 
 
