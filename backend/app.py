@@ -51,8 +51,8 @@ def read_json(filename):
 # Sync ke GitHub Repository
 # ─────────────────────────────────────────────
 def sync_to_github(filename):
-    token = os.environ.get('GITHUB_TOKEN')
-    repo = os.environ.get('GITHUB_REPO', 'Fatt-dev/webpkl')
+    token = (os.environ.get('GITHUB_TOKEN') or '').strip()
+    repo = (os.environ.get('GITHUB_REPO') or 'Fatt-dev/webpkl').strip()
     if not token:
         print(f"[GitHub Sync] GITHUB_TOKEN belum di-set. Skip sync GitHub untuk {filename}")
         return False
