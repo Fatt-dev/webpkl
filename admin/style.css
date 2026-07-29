@@ -140,6 +140,47 @@ body {
     justify-content: center;
 }
 
+.sidebar-credit {
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 8px 0;
+}
+
+.credit-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.credit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.credit-list li {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 500;
+    padding-left: 10px;
+    position: relative;
+}
+
+.credit-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: rgba(0, 124, 192, 0.7);
+    font-weight: 700;
+}
+
 .sidebar-footer {
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);

@@ -34,13 +34,25 @@
                 </div>
                 <div class="nav-item" data-tab="runtun">
                     <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
-                    <span class="nav-text">Runtun Waktu</span>
+                    <span class="nav-text">Data Runtun Waktu</span>
                 </div>
                 <div class="nav-item" data-tab="kecamatan">
                     <span class="nav-icon"><i class="fa-solid fa-map-location-dot"></i></span>
                     <span class="nav-text">Data Kecamatan</span>
                 </div>
             </nav>
+
+            <div class="sidebar-credit">
+                <p class="credit-title">Credit to:</p>
+                <ul class="credit-list">
+                    <li>Al Fath Miftahurrizky</li>
+                    <li>Muhammad Rasyid</li>
+                    <li>Nabila Shasya Sabrina</li>
+                    <li>Naila Fauziyah</li>
+                    <li>Sukria Septi Romadani</li>
+                </ul>
+            </div>
+
             <div class="sidebar-footer">
                 <div class="user-profile">
                     <div class="avatar"><i class="fa-solid fa-user"></i></div>
@@ -58,7 +70,7 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            
+
             <!-- Top Bar -->
             <header class="topbar">
                 <div class="breadcrumb">
@@ -68,10 +80,6 @@
                 <div class="topbar-right">
                     <div class="live-clock" id="live-clock">
                         <i class="fa-regular fa-calendar-days" style="margin-right: 6px;"></i> Memuat waktu...
-                    </div>
-                    <div class="notification-badge">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="badge-dot"></span>
                     </div>
                 </div>
             </header>
@@ -128,7 +136,9 @@
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                         </select>
-                        <button type="button" id="btn-add-indikator-tahun" style="padding: 10px 15px; border: 1px dashed var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); font-size: 13px;">+ Tambah Tahun</button>
+                        <button type="button" id="btn-add-indikator-tahun"
+                            style="padding: 10px 15px; border: 1px dashed var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); font-size: 13px;">+
+                            Tambah Tahun</button>
                     </div>
                 </div>
 
@@ -189,7 +199,7 @@
                     <div class="runtun-input-card">
                         <h3 id="runtun-form-title">Input Data Baru</h3>
                         <input type="hidden" id="runtun-edit-id" value="">
-                        
+
                         <div class="form-group">
                             <label>Nama Data / Indikator</label>
                             <input type="text" id="runtun-nama" placeholder="Contoh : Jumlah Penduduk">
@@ -198,7 +208,8 @@
                         <div class="form-group">
                             <label>Pilih Tahun Data</label>
                             <div class="tahun-list" id="runtun-tahun-list">
-                                <button class="tambah-tahun" id="btn-add-runtun-tahun"><i class="fa-solid fa-plus"></i> Tahun</button>
+                                <button class="tambah-tahun" id="btn-add-runtun-tahun"><i class="fa-solid fa-plus"></i>
+                                    Tahun</button>
                             </div>
                         </div>
 
@@ -207,7 +218,8 @@
                             <input type="number" step="any" id="runtun-nilai" placeholder="Masukkan nilai">
                         </div>
 
-                        <button class="btn-simpan" id="btn-save-runtun"><i class="fa-solid fa-floppy-disk"></i> Simpan Data</button>
+                        <button class="btn-simpan" id="btn-save-runtun"><i class="fa-solid fa-floppy-disk"></i> Simpan
+                            Data</button>
                     </div>
 
                     <!-- DATA TERSEDIA -->
@@ -228,11 +240,11 @@
                 </div>
 
                 <div class="kecamatan-container">
-                    
+
                     <!-- INPUT VARIABEL -->
                     <div class="kecamatan-card">
                         <h3>Tambah Variabel Kecamatan</h3>
-                        
+
                         <div class="form-group">
                             <label>Tahun Data</label>
                             <div style="display: flex; gap: 10px;">
@@ -242,7 +254,9 @@
                                     <option value="2025">2025</option>
                                     <option value="2026">2026</option>
                                 </select>
-                                <button type="button" id="btn-add-kec-input-tahun" style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+ Tahun</button>
+                                <button type="button" id="btn-add-kec-input-tahun"
+                                    style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+
+                                    Tahun</button>
                             </div>
                         </div>
 
@@ -257,7 +271,9 @@
                                     <option value="Ekonomi">Ekonomi</option>
                                     <option value="Kependudukan">Kependudukan</option>
                                 </select>
-                                <button type="button" id="btn-add-kec-tema" style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+ Tema</button>
+                                <button type="button" id="btn-add-kec-tema"
+                                    style="padding: 10px 15px; border: 1px dashed var(--primary); background: rgba(4, 50, 95, 0.05); color: var(--primary); font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">+
+                                    Tema</button>
                             </div>
                         </div>
 
@@ -268,7 +284,8 @@
 
                         <div class="form-group">
                             <label>Input Nilai Kecamatan (Pemisah Titik Koma ';')</label>
-                            <textarea id="kec-input-nilai" placeholder="Masukkan 24 nilai berurutan dipisahkan titik koma. Contoh :&#10;838273;12000;9000;7000;..."></textarea>
+                            <textarea id="kec-input-nilai"
+                                placeholder="Masukkan 24 nilai berurutan dipisahkan titik koma. Contoh :&#10;838273;12000;9000;7000;..."></textarea>
                             <small>Urutan mengikuti daftar kecamatan yang telah ditentukan (24 Kecamatan)</small>
                         </div>
 
@@ -278,7 +295,7 @@
                     <!-- PILIH DATA VISUALISASI -->
                     <div class="kecamatan-card">
                         <h3>Pilih Data Visualisasi</h3>
-                        
+
                         <div class="form-group">
                             <label>Tahun</label>
                             <select id="kec-filter-tahun">
@@ -297,7 +314,9 @@
                                     <option value="Ekonomi">Ekonomi</option>
                                     <option value="Kependudukan">Kependudukan</option>
                                 </select>
-                                <button type="button" id="btn-delete-kec-tema" style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus Tema</button>
+                                <button type="button" id="btn-delete-kec-tema"
+                                    style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus
+                                    Tema</button>
                             </div>
                         </div>
 
@@ -307,17 +326,21 @@
                                 <select id="kec-filter-variabel" style="flex: 1;">
                                     <option value="" selected disabled>Pilih Variabel</option>
                                 </select>
-                                <button type="button" id="btn-delete-kec-var" style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus Variabel</button>
+                                <button type="button" id="btn-delete-kec-var"
+                                    style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus
+                                    Variabel</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- TABEL DATA -->
                     <div class="kecamatan-card tabel-card">
-                        <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div class="table-controls"
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                             <h3 id="tabel-judul-kecamatan" style="margin: 0;">Data Pertanian Tahun 2025</h3>
                             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <button type="button" id="btn-save-inline-kec" class="btn-simpan" style="width: auto; margin: 0; padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px; background-color: var(--secondary); box-shadow: 0 4px 10px rgba(0, 124, 192, 0.15);">
+                                <button type="button" id="btn-save-inline-kec" class="btn-simpan"
+                                    style="width: auto; margin: 0; padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px; background-color: var(--secondary); box-shadow: 0 4px 10px rgba(0, 124, 192, 0.15);">
                                     <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
                                 </button>
                                 <div class="search-wrapper" style="margin: 0;">
@@ -441,10 +464,10 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icons = { 
-                success: '<i class="fa-solid fa-circle-check" style="color: #10B981;"></i>', 
-                error: '<i class="fa-solid fa-circle-xmark" style="color: #EF4444;"></i>', 
-                warning: '<i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i>' 
+            const icons = {
+                success: '<i class="fa-solid fa-circle-check" style="color: #10B981;"></i>',
+                error: '<i class="fa-solid fa-circle-xmark" style="color: #EF4444;"></i>',
+                warning: '<i class="fa-solid fa-triangle-exclamation" style="color: #F59E0B;"></i>'
             };
             toast.innerHTML = `<div class="toast-icon">${icons[type] || '<i class="fa-solid fa-bell"></i>'}</div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>`;
             container.appendChild(toast);
@@ -464,11 +487,11 @@
                 const res = await fetch(`${API}/api/indikator`);
                 const data = await res.json();
                 const yearsFromDb = Object.keys(data).map(Number);
-                
+
                 // default years 2020-2025
                 const defaultYears = [2020, 2021, 2022, 2023, 2024, 2025];
                 const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => a - b);
-                
+
                 indYearSelect.innerHTML = '<option value="" selected disabled>-- Pilih Tahun --</option>';
                 allYears.forEach(year => {
                     const opt = document.createElement('option');
@@ -527,7 +550,7 @@
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
-            
+
             years.forEach(y => {
                 if (!indYearSelect.querySelector(`option[value="${y}"]`)) {
                     const newOpt = document.createElement('option');
@@ -575,7 +598,7 @@
                 saveRuntunBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data';
                 return;
             }
-            const existing = runtunData.find(r => 
+            const existing = runtunData.find(r =>
                 r.nama.toLowerCase() === nama.toLowerCase() && r.tahun === selectedRuntunTahun.toString()
             );
             if (existing) {
@@ -610,7 +633,7 @@
         function renderRuntunYears() {
             const nama = runtunNamaInput.value.trim().toLowerCase();
             let yearsToShow = [];
-            
+
             if (nama) {
                 const records = runtunData.filter(r => r.nama.toLowerCase() === nama);
                 const dbYears = records.map(r => parseInt(r.tahun));
@@ -618,11 +641,11 @@
             } else {
                 yearsToShow = [...activeRuntunYears].sort((a, b) => a - b);
             }
-            
+
             // remove existing buttons
             const buttons = runtunTahunListContainer.querySelectorAll('.runtun-tahun-btn');
             buttons.forEach(btn => btn.remove());
-            
+
             // append buttons
             yearsToShow.forEach(year => {
                 const btn = document.createElement('button');
@@ -640,29 +663,29 @@
         addRuntunTahunBtn.addEventListener('click', function () {
             const buttons = runtunTahunListContainer.querySelectorAll('.runtun-tahun-btn');
             const currentYears = Array.from(buttons).map(b => parseInt(b.getAttribute('data-value'))).sort((a, b) => a - b);
-            
+
             let nextYearSuggest = "";
             if (currentYears.length > 0) {
                 nextYearSuggest = currentYears[currentYears.length - 1] + 1;
             } else {
                 nextYearSuggest = "2020";
             }
-            
+
             const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):', nextYearSuggest);
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
-            
+
             years.forEach(y => {
                 if (!activeRuntunYears.includes(y)) {
                     activeRuntunYears.push(y);
                 }
             });
-            
+
             selectedRuntunTahun = years[years.length - 1].toString();
             renderRuntunYears();
             updateRuntunFormFromSelection();
-            
+
             const newBtn = runtunTahunListContainer.querySelector(`.runtun-tahun-btn[data-value="${selectedRuntunTahun}"]`);
             if (newBtn) newBtn.click();
             showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
@@ -775,13 +798,13 @@
             renderRuntunYears();
             selectedRuntunTahun = latest.tahun.toString();
             updateRuntunFormFromSelection();
-            
+
             const btn = runtunTahunListContainer.querySelector(`.runtun-tahun-btn[data-value="${selectedRuntunTahun}"]`);
             if (btn) {
                 document.querySelectorAll('.runtun-tahun-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             }
-            
+
             document.querySelector('.runtun-input-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
             showToast('warning', 'Mode Edit', `Mengedit data "${nama}".`);
         };
@@ -827,22 +850,22 @@
         function updateThemeSelects() {
             const prevInputVal = inputKecTema.value;
             const prevFilterVal = filterKecTema.value;
-            
+
             inputKecTema.innerHTML = '<option value="" selected disabled>Pilih Tema</option>';
             filterKecTema.innerHTML = '';
-            
+
             ALL_THEMES.forEach(t => {
                 const opt1 = document.createElement('option');
                 opt1.value = t;
                 opt1.textContent = t;
                 inputKecTema.appendChild(opt1);
-                
+
                 const opt2 = document.createElement('option');
                 opt2.value = t;
                 opt2.textContent = t;
                 filterKecTema.appendChild(opt2);
             });
-            
+
             if (prevInputVal && ALL_THEMES.includes(prevInputVal)) {
                 inputKecTema.value = prevInputVal;
             }
@@ -851,7 +874,7 @@
             } else if (ALL_THEMES.includes("Pertanian")) {
                 filterKecTema.value = "Pertanian";
             }
-            
+
             inputKecTema.syncCustomSelect?.();
             filterKecTema.syncCustomSelect?.();
         }
@@ -865,10 +888,10 @@
             } catch (e) {
                 currentKecData = {};
             }
-            
+
             const varKeys = Object.keys(currentKecData);
             const prevVal = filterKecVar.value;
-            
+
             filterKecVar.innerHTML = '';
             if (varKeys.length === 0) {
                 const opt = document.createElement('option');
@@ -884,14 +907,14 @@
                     opt.textContent = v;
                     filterKecVar.appendChild(opt);
                 });
-                
+
                 if (prevVal && varKeys.includes(prevVal)) {
                     filterKecVar.value = prevVal;
                 } else {
                     filterKecVar.value = varKeys[0];
                 }
             }
-            
+
             filterKecVar.syncCustomSelect?.();
             renderKecamatanTable();
         }
@@ -901,7 +924,7 @@
             const tema = filterKecTema.value;
             const varName = filterKecVar.value;
             const search = (searchKecInput.value || '').toLowerCase();
-            
+
             const hasData = varName && currentKecData[varName];
 
             if (lastLoadedVar !== varName || lastLoadedTahun !== tahun || lastLoadedTema !== tema) {
@@ -912,14 +935,14 @@
             }
 
             thVarNama.textContent = hasData ? varName : 'Data';
-            tableTitle.textContent = hasData 
+            tableTitle.textContent = hasData
                 ? `Data ${tema} Tahun ${tahun} — ${varName}`
                 : `Data ${tema} Tahun ${tahun}`;
 
             tableBody.innerHTML = '';
             KECAMATAN_NAMES.forEach((kec, i) => {
                 if (search && !kec.toLowerCase().includes(search)) return;
-                
+
                 let cellContent;
                 if (hasData) {
                     const val = editingKecValues[i];
@@ -994,10 +1017,10 @@
                 const res = await fetch(`${API}/api/kecamatan/meta`);
                 const meta = await res.json();
                 const yearsFromDb = Object.keys(meta).map(Number);
-                
+
                 const defaultYears = [2024, 2025, 2026];
                 const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => b - a);
-                
+
                 // Reset ke default agar tema yang dihapus hilang dari list
                 ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
                 // Tambah tema dari database jika belum ada di list default
@@ -1033,7 +1056,7 @@
                 } else {
                     filterKecTahun.value = 2025;
                 }
-                
+
                 inputKecTahun.syncCustomSelect?.();
                 filterKecTahun.syncCustomSelect?.();
             } catch (e) {
@@ -1046,7 +1069,7 @@
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
-            
+
             years.forEach(y => {
                 [inputKecTahun, filterKecTahun].forEach(sel => {
                     if (!sel.querySelector(`option[value="${y}"]`)) {
@@ -1059,10 +1082,10 @@
             });
             const lastYear = years[years.length - 1];
             inputKecTahun.value = lastYear;
-            
+
             inputKecTahun.syncCustomSelect?.();
             filterKecTahun.syncCustomSelect?.();
-            
+
             showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
         });
 
@@ -1322,4 +1345,5 @@
         init();
     </script>
 </body>
+
 </html>
