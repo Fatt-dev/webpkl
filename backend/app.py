@@ -75,6 +75,11 @@ def logo_bps_static(filename):
     return send_from_directory(os.path.join(PROJECT_DIR, 'logo_bps'), filename)
 
 
+@app.route('/wallpaper/<path:filename>')
+def wallpaper_static(filename):
+    return send_from_directory(os.path.join(PROJECT_DIR, 'wallpaper'), filename)
+
+
 # ─────────────────────────────────────────────
 # API: Data Indikator Utama
 # ─────────────────────────────────────────────

@@ -8,15 +8,15 @@
     --success: #10B981;       /* Green */
     --danger: #EF4444;        /* Red */
     --warning: #F59E0B;       /* Orange-yellow */
-    --bg-page: #F4F6F9;       /* Light gray page background */
-    --bg-card: #FFFFFF;       /* White card background */
+    --bg-page: transparent;   /* Page background transparent */
+    --bg-card: rgba(255, 255, 255, 0.88); /* Translucent glass card */
     --text-primary: #1E293B;  /* Slate 800 */
     --text-secondary: #475569;/* Slate 600 */
     --text-muted: #94A3B8;    /* Slate 400 */
-    --border-color: #E2E8F0;  /* Slate 200 */
+    --border-color: rgba(226, 232, 240, 0.8);  /* Translucent border */
     
-    --sidebar-bg: #091D33;    /* Very dark blue sidebar */
-    --sidebar-hover: #132E4F;
+    --sidebar-bg: rgba(9, 29, 51, 0.88);    /* Translucent dark sidebar */
+    --sidebar-hover: rgba(19, 46, 79, 0.9);
     --sidebar-active: #007CC0;
     
     --radius-sm: 8px;
@@ -38,7 +38,8 @@
 }
 
 body {
-    background-color: var(--bg-page);
+    background: url('../wallpaper/background_1.png') no-repeat center center fixed;
+    background-size: cover;
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
@@ -56,12 +57,14 @@ body {
 .sidebar {
     width: 280px;
     background-color: var(--sidebar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     color: white;
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
     transition: var(--transition);
     z-index: 100;
 }
@@ -186,6 +189,8 @@ body {
 /* Topbar Styles */
 .topbar {
     background-color: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     height: 80px;
     min-height: 80px;
     padding: 0 40px;
@@ -338,6 +343,8 @@ body {
 
 .stat-card {
     background-color: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 24px;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
@@ -410,6 +417,8 @@ body {
 
 .menu-card {
     background-color: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius-lg);
     padding: 35px;
     border: 1px solid var(--border-color);
@@ -526,7 +535,7 @@ body {
 .section-header h2 {
     font-size: 24px;
     font-weight: 800;
-    color: var(--primary);
+    color: #B2F2FF;
     margin-bottom: 6px;
     position: relative;
     display: inline-block;
@@ -534,7 +543,7 @@ body {
 
 .section-header p {
     font-size: 14px;
-    color: var(--text-secondary);
+    color: #B2F2FF;
 }
 
 /* ================= DATA INDIKATOR TAB ================= */
