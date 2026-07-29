@@ -355,7 +355,7 @@ section {
 .hero p {
     max-width: 780px;
     margin: 0 auto 40px auto;
-    color: var(--text-secondary);
+    color: #B2F2FF;
     font-size: 18px;
     line-height: 1.8;
 }
