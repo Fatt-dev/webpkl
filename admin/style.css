@@ -1025,11 +1025,11 @@ thead th {
 
 tbody tr {
     transition: var(--transition);
-    background-color: white;
+    background-color: #ffffff;
 }
 
 tbody tr:nth-child(even) {
-    background-color: var(--bg-page);
+    background-color: #f8fafc;
 }
 
 tbody tr:hover {
@@ -1262,4 +1262,154 @@ tbody tr:last-child td {
     .search-wrapper {
         width: 100%;
     }
+}
+
+/* ============================================================
+   CUSTOM SEARCHABLE SELECT DROPDOWNS
+   ============================================================ */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--secondary);
+    background-color: white;
+}
+
+.custom-select-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    margin-top: 5px;
+    padding: 10px;
+    animation: selectFadeInDown 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes selectFadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-select-dropdown.show {
+    display: block;
+}
+
+.custom-select-search {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    font-size: 13px;
+    margin-bottom: 8px;
+    background-color: var(--bg-page);
+    transition: var(--transition);
+}
+
+.custom-select-search:focus {
+    border-color: var(--secondary);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(0, 124, 192, 0.1);
+}
+
+.custom-select-options {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 4px;
+}
+
+.custom-select-option {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.custom-select-option:hover {
+    background-color: rgba(0, 124, 192, 0.08);
+    color: var(--primary);
+}
+
+.custom-select-option.selected {
+    background-color: var(--secondary);
+    color: white;
+    font-weight: 600;
+}
+
+.custom-select-option.no-results {
+    text-align: center;
+    color: var(--text-muted);
+    pointer-events: none;
+    padding: 15px 0;
+}
+
+/* ============================================================
+   INLINE TABLE EDITING
+   ============================================================ */
+.kec-inline-input {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    color: var(--primary);
+    background-color: #f1f5f9;
+    font-family: inherit;
+    font-size: 14px;
+    transition: var(--transition);
+    box-sizing: border-box;
+}
+
+.kec-inline-input:focus {
+    border-color: var(--secondary);
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 124, 192, 0.1);
 }

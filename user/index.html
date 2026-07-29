@@ -10,6 +10,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/user/style.css">
+    <link rel="icon" type="image/webp" href="/logo_bps/logo%20bps.webp">
+
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -49,7 +51,7 @@
             <div class="logo">
 
                 <div class="logo-icon">
-                    <img src="../logo_bps/logo%20bps.webp" alt="Logo BPS">
+                    <img src="/logo_bps/logo%20bps.webp" alt="Logo BPS">
                 </div>
 
                 <div class="logo-text">
@@ -266,7 +268,7 @@
 
             <!-- Filter -->
             <div class="time-filter">
-                <select id="tsVariable" size="5">
+                <select id="tsVariable">
                     <option selected disabled>Pilih Variabel</option>
                 </select>
             </div>
@@ -655,18 +657,20 @@
                     if (idx === 0) opt.selected = true;
                     select.appendChild(opt);
                 });
+                select.syncCustomSelect?.();
                 select.addEventListener('change', function () {
                     const filtered = data.filter(d => d.nama === this.value)
-                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                         .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
                     renderTimeSeriesChart(filtered, this.value);
                 });
                 if (names.length > 0) {
                     const filtered = data.filter(d => d.nama === names[0])
-                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                         .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
                     renderTimeSeriesChart(filtered, names[0]);
                 }
             } catch (e) {
                 select.innerHTML = '<option>Gagal memuat data — pastikan server berjalan</option>';
+                select.syncCustomSelect?.();
             }
         }
 
@@ -826,12 +830,15 @@
                 const tahuns = Object.keys(kecamatanMeta).sort().reverse();
                 tahunSel.innerHTML = '<option value="">Pilih Tahun</option>';
                 tahuns.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; tahunSel.appendChild(o); });
+                tahunSel.syncCustomSelect?.();
 
                 tahunSel.addEventListener('change', function () {
                     const temas = kecamatanMeta[this.value] || [];
                     temaSel.innerHTML = '<option value="">Pilih Tema</option>';
                     temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; temaSel.appendChild(o); });
                     varSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                    temaSel.syncCustomSelect?.();
+                    varSel.syncCustomSelect?.();
                 });
 
                 temaSel.addEventListener('change', async function () {
@@ -841,6 +848,7 @@
                     const d = await r.json();
                     varSel.innerHTML = '<option value="">Pilih Variabel</option>';
                     Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; varSel.appendChild(o); });
+                    varSel.syncCustomSelect?.();
                 });
             } catch (e) { console.log('Map meta load failed:', e); }
         }
@@ -943,12 +951,15 @@
                 const yTemaSel = document.getElementById('reg-y-tema');
                 const yDataSel = document.getElementById('reg-y-data');
                 tahuns.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; yTahunSel.appendChild(o); });
+                yTahunSel.syncCustomSelect?.();
 
                 yTahunSel.addEventListener('change', function () {
                     const temas = meta[this.value] || [];
                     yTemaSel.innerHTML = '<option value="">Pilih Tema</option>';
                     temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; yTemaSel.appendChild(o); });
                     yDataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                    yTemaSel.syncCustomSelect?.();
+                    yDataSel.syncCustomSelect?.();
                 });
                 yTemaSel.addEventListener('change', async function () {
                     const tahun = yTahunSel.value, tema = this.value;
@@ -957,6 +968,7 @@
                     const d = await r.json();
                     yDataSel.innerHTML = '<option value="">Pilih Variabel</option>';
                     Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; yDataSel.appendChild(o); });
+                    yDataSel.syncCustomSelect?.();
                 });
 
                 // Tambah X pertama otomatis
@@ -1003,6 +1015,8 @@
                 temaSel.innerHTML = '<option value="">Pilih Tema</option>';
                 temas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; temaSel.appendChild(o); });
                 dataSel.innerHTML = '<option value="">Pilih Variabel</option>';
+                temaSel.syncCustomSelect?.();
+                dataSel.syncCustomSelect?.();
             });
             temaSel.addEventListener('change', async function () {
                 const tahun = tahunSel.value, tema = this.value;
@@ -1011,7 +1025,13 @@
                 const d = await r.json();
                 dataSel.innerHTML = '<option value="">Pilih Variabel</option>';
                 Object.keys(d).forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; dataSel.appendChild(o); });
+                dataSel.syncCustomSelect?.();
             });
+
+            // Terapkan custom searchable dropdown pada X variable selects
+            makeSearchableSelectEl(tahunSel);
+            makeSearchableSelectEl(temaSel);
+            makeSearchableSelectEl(dataSel);
         }
 
         window.removeXVar = function (btn) {
@@ -1151,6 +1171,114 @@
         window.addEventListener('scroll', updateActiveNav);
 
         // ============================================================
+        // HELPER CUSTOM SEARCHABLE SELECT DROPDOWNS
+        // ============================================================
+        function makeSearchableSelectEl(select) {
+            if (!select || select._customSelectInit) return;
+            select._customSelectInit = true;
+
+            select.style.display = 'none';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'custom-select-wrapper';
+            select.parentNode.insertBefore(wrapper, select.nextSibling);
+
+            wrapper.innerHTML = `
+                <div class="custom-select-trigger">
+                    <span class="custom-select-label">Pilih...</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-secondary);"></i>
+                </div>
+                <div class="custom-select-dropdown">
+                    <input type="text" class="custom-select-search" placeholder="Cari...">
+                    <div class="custom-select-options"></div>
+                </div>
+            `;
+
+            const trigger = wrapper.querySelector('.custom-select-trigger');
+            const dropdown = wrapper.querySelector('.custom-select-dropdown');
+            const searchInput = wrapper.querySelector('.custom-select-search');
+            const optionsContainer = wrapper.querySelector('.custom-select-options');
+            const label = wrapper.querySelector('.custom-select-label');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('show');
+                });
+                dropdown.classList.toggle('show');
+                if (dropdown.classList.contains('show')) {
+                    searchInput.value = '';
+                    filterOptions('');
+                    searchInput.focus();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            function filterOptions(query) {
+                const q = query.toLowerCase().trim();
+                const opts = optionsContainer.querySelectorAll('.custom-select-option');
+                let hasVisible = false;
+                optionsContainer.querySelectorAll('.no-results').forEach(el => el.remove());
+                opts.forEach(opt => {
+                    if (opt.textContent.toLowerCase().includes(q)) {
+                        opt.style.display = 'block';
+                        hasVisible = true;
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+                if (!hasVisible && opts.length > 0) {
+                    const noRes = document.createElement('div');
+                    noRes.className = 'custom-select-option no-results';
+                    noRes.textContent = 'Tidak ditemukan';
+                    optionsContainer.appendChild(noRes);
+                }
+            }
+
+            searchInput.addEventListener('input', (e) => filterOptions(e.target.value));
+
+            function syncOptions() {
+                optionsContainer.innerHTML = '';
+                const selectedVal = select.value;
+                let selectedLabelText = 'Pilih...';
+                Array.from(select.options).forEach(opt => {
+                    if (opt.disabled && !opt.value) return;
+                    const div = document.createElement('div');
+                    div.className = 'custom-select-option';
+                    div.setAttribute('data-value', opt.value);
+                    div.textContent = opt.textContent;
+                    if (opt.value === selectedVal && opt.value !== '') {
+                        div.classList.add('selected');
+                        selectedLabelText = opt.textContent;
+                    }
+                    div.addEventListener('click', () => {
+                        select.value = opt.value;
+                        label.textContent = opt.textContent;
+                        dropdown.classList.remove('show');
+                        select.dispatchEvent(new Event('change'));
+                        optionsContainer.querySelectorAll('.custom-select-option').forEach(i => i.classList.remove('selected'));
+                        div.classList.add('selected');
+                    });
+                    optionsContainer.appendChild(div);
+                });
+                label.textContent = selectedLabelText;
+            }
+
+            syncOptions();
+            select.syncCustomSelect = syncOptions;
+        }
+
+        function makeSearchableSelect(selectId) {
+            const select = document.getElementById(selectId);
+            if (select) makeSearchableSelectEl(select);
+        }
+
+        // ============================================================
         // INISIALISASI
         // ============================================================
         document.addEventListener('DOMContentLoaded', async function () {
@@ -1158,6 +1286,19 @@
             await initTimeSeries();
             await initMap();
             await loadRegressionDropdowns();
+
+            // Terapkan custom searchable dropdown pada filter peta
+            makeSearchableSelect('map-filter-tahun');
+            makeSearchableSelect('map-filter-tema');
+            makeSearchableSelect('map-filter-variabel');
+
+            // Terapkan custom searchable dropdown pada variabel Y regresi
+            makeSearchableSelect('reg-y-tahun');
+            makeSearchableSelect('reg-y-tema');
+            makeSearchableSelect('reg-y-data');
+
+            // Terapkan custom searchable dropdown pada visualisasi runtun waktu
+            makeSearchableSelect('tsVariable');
         });
     </script>
 

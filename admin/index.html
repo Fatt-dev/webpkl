@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard BPS Kabupaten Cilacap</title>
+    <link rel="icon" type="image/webp" href="/logo_bps/logo%20bps.webp">
     <link rel="stylesheet" href="/admin/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -16,7 +17,7 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="../logo_bps/logo%20bps.webp" alt="Logo BPS" class="bps-logo-img">
+                <img src="/logo_bps/logo%20bps.webp" alt="Logo BPS" class="bps-logo-img">
                 <div class="brand-text">
                     <h2>BPS CILACAP</h2>
                     <span>Admin Panel</span>
@@ -284,13 +285,16 @@
 
                         <div class="form-group">
                             <label>Tema Besar</label>
-                            <select id="kec-filter-tema">
-                                <option value="Pertanian" selected>Pertanian</option>
-                                <option value="Kesehatan">Kesehatan</option>
-                                <option value="Pendidikan">Pendidikan</option>
-                                <option value="Ekonomi">Ekonomi</option>
-                                <option value="Kependudukan">Kependudukan</option>
-                            </select>
+                            <div style="display: flex; gap: 10px;">
+                                <select id="kec-filter-tema" style="flex: 1;">
+                                    <option value="Pertanian" selected>Pertanian</option>
+                                    <option value="Kesehatan">Kesehatan</option>
+                                    <option value="Pendidikan">Pendidikan</option>
+                                    <option value="Ekonomi">Ekonomi</option>
+                                    <option value="Kependudukan">Kependudukan</option>
+                                </select>
+                                <button type="button" id="btn-delete-kec-tema" style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus Tema</button>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -306,11 +310,16 @@
 
                     <!-- TABEL DATA -->
                     <div class="kecamatan-card tabel-card">
-                        <div class="table-controls">
-                            <h3 id="tabel-judul-kecamatan">Data Pertanian Tahun 2025</h3>
-                            <div class="search-wrapper">
-                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                                <input type="text" id="kec-table-search" placeholder="Cari nama kecamatan...">
+                        <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <h3 id="tabel-judul-kecamatan" style="margin: 0;">Data Pertanian Tahun 2025</h3>
+                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <button type="button" id="btn-save-inline-kec" class="btn-simpan" style="width: auto; margin: 0; padding: 8px 16px; font-size: 13px; display: flex; align-items: center; gap: 6px; background-color: var(--secondary); box-shadow: 0 4px 10px rgba(0, 124, 192, 0.15);">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                                </button>
+                                <div class="search-wrapper" style="margin: 0;">
+                                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                    <input type="text" id="kec-table-search" placeholder="Cari nama kecamatan...">
+                                </div>
                             </div>
                         </div>
 
@@ -792,6 +801,8 @@
         const filterKecTema = document.getElementById('kec-filter-tema');
         const filterKecVar = document.getElementById('kec-filter-variabel');
         const btnDeleteKecVar = document.getElementById('btn-delete-kec-var');
+        const btnDeleteKecTema = document.getElementById('btn-delete-kec-tema');
+        const btnSaveInlineKec = document.getElementById('btn-save-inline-kec');
         const searchKecInput = document.getElementById('kec-table-search');
         const tableBody = document.getElementById('kecamatan-table-body');
         const thVarNama = document.getElementById('th-variabel-nama');
@@ -806,6 +817,8 @@
 
         let ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
         let currentKecData = {};
+        let editingKecValues = [];
+        let lastLoadedVar = '', lastLoadedTahun = '', lastLoadedTema = '';
 
         function updateThemeSelects() {
             const prevInputVal = inputKecTema.value;
@@ -834,6 +847,9 @@
             } else if (ALL_THEMES.includes("Pertanian")) {
                 filterKecTema.value = "Pertanian";
             }
+            
+            inputKecTema.syncCustomSelect?.();
+            filterKecTema.syncCustomSelect?.();
         }
 
         async function updateKecVariables() {
@@ -872,6 +888,7 @@
                 }
             }
             
+            filterKecVar.syncCustomSelect?.();
             renderKecamatanTable();
         }
 
@@ -882,7 +899,13 @@
             const search = (searchKecInput.value || '').toLowerCase();
             
             const hasData = varName && currentKecData[varName];
-            const values = hasData ? currentKecData[varName] : null;
+
+            if (lastLoadedVar !== varName || lastLoadedTahun !== tahun || lastLoadedTema !== tema) {
+                lastLoadedVar = varName;
+                lastLoadedTahun = tahun;
+                lastLoadedTema = tema;
+                editingKecValues = hasData ? [...currentKecData[varName]] : Array(24).fill(null);
+            }
 
             thVarNama.textContent = hasData ? varName : 'Data';
             tableTitle.textContent = hasData 
@@ -892,13 +915,70 @@
             tableBody.innerHTML = '';
             KECAMATAN_NAMES.forEach((kec, i) => {
                 if (search && !kec.toLowerCase().includes(search)) return;
-                const val = (values && Array.isArray(values)) ? values[i] : null;
-                const display = (val !== null && val !== undefined && val !== '-') ? parseFloat(val).toLocaleString('id-ID') : '-';
+                
+                let cellContent;
+                if (hasData) {
+                    const val = editingKecValues[i];
+                    const inputVal = (val !== null && val !== undefined) ? val : '';
+                    cellContent = `<input type="number" step="any" class="kec-inline-input" data-index="${i}" value="${inputVal}" placeholder="-">`;
+                } else {
+                    cellContent = `<span style="color:#aaa">-</span>`;
+                }
+
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="text-align:center">${i + 1}</td><td>${kec}</td><td style="font-weight:700;color:var(--primary)">${display}</td>`;
+                tr.innerHTML = `<td style="text-align:center">${i + 1}</td><td>${kec}</td><td>${cellContent}</td>`;
                 tableBody.appendChild(tr);
             });
         }
+
+        tableBody.addEventListener('input', function (e) {
+            if (e.target.classList.contains('kec-inline-input')) {
+                const idx = parseInt(e.target.dataset.index);
+                const val = e.target.value === '' ? null : parseFloat(e.target.value);
+                editingKecValues[idx] = val;
+            }
+        });
+
+        btnSaveInlineKec.addEventListener('click', async function () {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            const variabel = filterKecVar.value;
+
+            if (!tahun || !tema || !variabel) {
+                showToast('error', 'Gagal', 'Pilih tahun, tema, dan variabel terlebih dahulu.');
+                return;
+            }
+
+            if (!editingKecValues || editingKecValues.length !== 24) {
+                showToast('error', 'Gagal', 'Data tidak valid.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/api/kecamatan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tahun: tahun,
+                        tema: tema,
+                        variabel: variabel,
+                        nilai: editingKecValues
+                    })
+                });
+
+                if (res.ok) {
+                    showToast('success', 'Perubahan Disimpan', `Data "${variabel}" berhasil disimpan.`);
+                    // Refresh data
+                    const r = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}`);
+                    currentKecData = await r.json();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
 
         filterKecTahun.addEventListener('change', updateKecVariables);
         filterKecTema.addEventListener('change', updateKecVariables);
@@ -914,6 +994,8 @@
                 const defaultYears = [2024, 2025, 2026];
                 const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => b - a);
                 
+                // Reset ke default agar tema yang dihapus hilang dari list
+                ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
                 // Tambah tema dari database jika belum ada di list default
                 Object.values(meta).forEach(temas => {
                     temas.forEach(t => {
@@ -947,6 +1029,9 @@
                 } else {
                     filterKecTahun.value = 2025;
                 }
+                
+                inputKecTahun.syncCustomSelect?.();
+                filterKecTahun.syncCustomSelect?.();
             } catch (e) {
                 console.error("Gagal memuat tahun kecamatan:", e);
             }
@@ -970,6 +1055,10 @@
             });
             const lastYear = years[years.length - 1];
             inputKecTahun.value = lastYear;
+            
+            inputKecTahun.syncCustomSelect?.();
+            filterKecTahun.syncCustomSelect?.();
+            
             showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
         });
 
@@ -1005,6 +1094,31 @@
                 });
                 if (res.ok) {
                     showToast('error', 'Data Dihapus', `Variabel "${variabel}" berhasil dihapus.`);
+                    await initKecamatanYears();
+                    await updateKecVariables();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
+        btnDeleteKecTema.addEventListener('click', async function () {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            if (!tahun || !tema) {
+                showToast('error', 'Gagal', 'Pilih tahun dan tema terlebih dahulu.');
+                return;
+            }
+            if (!confirm(`Hapus seluruh data tema "${tema}" pada tahun ${tahun}? Tindakan ini tidak bisa dibatalkan.`)) return;
+            try {
+                const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${encodeURIComponent(tema)}`, {
+                    method: 'DELETE'
+                });
+                if (res.ok) {
+                    showToast('error', 'Tema Dihapus', `Tema "${tema}" berhasil dihapus untuk tahun ${tahun}.`);
                     await initKecamatanYears();
                     await updateKecVariables();
                 } else {
@@ -1062,6 +1176,130 @@
         });
 
         // ============================================================
+        // HELPER CUSTOM SEARCHABLE SELECT DROPDOWNS
+        // ============================================================
+        function makeSearchableSelect(selectId) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+
+            select.style.display = 'none';
+
+            let wrapper = select.parentNode.querySelector(`.custom-select-wrapper[data-select="${selectId}"]`);
+            if (!wrapper) {
+                wrapper = document.createElement('div');
+                wrapper.className = 'custom-select-wrapper';
+                wrapper.setAttribute('data-select', selectId);
+                select.parentNode.insertBefore(wrapper, select.nextSibling);
+            }
+
+            wrapper.innerHTML = `
+                <div class="custom-select-trigger">
+                    <span class="custom-select-label">Pilih...</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: var(--text-secondary);"></i>
+                </div>
+                <div class="custom-select-dropdown">
+                    <input type="text" class="custom-select-search" placeholder="Cari...">
+                    <div class="custom-select-options"></div>
+                </div>
+            `;
+
+            const trigger = wrapper.querySelector('.custom-select-trigger');
+            const dropdown = wrapper.querySelector('.custom-select-dropdown');
+            const searchInput = wrapper.querySelector('.custom-select-search');
+            const optionsContainer = wrapper.querySelector('.custom-select-options');
+            const label = wrapper.querySelector('.custom-select-label');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('show');
+                });
+                dropdown.classList.toggle('show');
+                if (dropdown.classList.contains('show')) {
+                    searchInput.value = '';
+                    filterOptions('');
+                    searchInput.focus();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            function filterOptions(query) {
+                const queryClean = query.toLowerCase().trim();
+                const options = optionsContainer.querySelectorAll('.custom-select-option');
+                let hasVisible = false;
+
+                optionsContainer.querySelectorAll('.no-results').forEach(el => el.remove());
+
+                options.forEach(opt => {
+                    const text = opt.textContent.toLowerCase();
+                    if (text.includes(queryClean)) {
+                        opt.style.display = 'block';
+                        hasVisible = true;
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+
+                if (!hasVisible && options.length > 0) {
+                    const noRes = document.createElement('div');
+                    noRes.className = 'custom-select-option no-results';
+                    noRes.textContent = 'Tidak ditemukan';
+                    optionsContainer.appendChild(noRes);
+                }
+            }
+
+            searchInput.addEventListener('input', (e) => {
+                filterOptions(e.target.value);
+            });
+
+            function syncOptions() {
+                optionsContainer.innerHTML = '';
+                const selectOptions = select.options;
+                const selectedVal = select.value;
+                let selectedLabelText = 'Pilih...';
+
+                Array.from(selectOptions).forEach(opt => {
+                    if (opt.disabled && !opt.value) return;
+
+                    const div = document.createElement('div');
+                    div.className = 'custom-select-option';
+                    div.setAttribute('data-value', opt.value);
+                    div.textContent = opt.textContent;
+
+                    if (opt.value === selectedVal) {
+                        div.classList.add('selected');
+                        selectedLabelText = opt.textContent;
+                    }
+
+                    div.addEventListener('click', () => {
+                        select.value = opt.value;
+                        label.textContent = opt.textContent;
+                        dropdown.classList.remove('show');
+
+                        select.dispatchEvent(new Event('change'));
+
+                        optionsContainer.querySelectorAll('.custom-select-option').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        div.classList.add('selected');
+                    });
+
+                    optionsContainer.appendChild(div);
+                });
+
+                label.textContent = selectedLabelText;
+            }
+
+            syncOptions();
+            select.syncCustomSelect = syncOptions;
+        }
+
+        // ============================================================
         // INISIALISASI AWAL
         // ============================================================
         async function init() {
@@ -1069,6 +1307,13 @@
             await loadRuntunData();
             await initKecamatanYears();
             await updateKecVariables();
+
+            // Ubah dropdown kecamatan menjadi searchable & scrollable
+            makeSearchableSelect('kec-input-tahun');
+            makeSearchableSelect('kec-input-tema');
+            makeSearchableSelect('kec-filter-tahun');
+            makeSearchableSelect('kec-filter-tema');
+            makeSearchableSelect('kec-filter-variabel');
         }
         init();
     </script>
