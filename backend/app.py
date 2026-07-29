@@ -286,14 +286,8 @@ def server_error(e):
 # Entry Point
 # ─────────────────────────────────────────────
 if __name__ == '__main__':
-    print("=" * 55)
-    print("  CILACAP DALAM ANGKA — Backend Server")
-    print("=" * 55)
-    print(f"  Project dir : {PROJECT_DIR}")
-    print(f"  Data dir    : {DATA_DIR}")
-    print(f"  GeoJSON     : {'[OK] Ada' if os.path.exists(GEOJSON_PATH) else '[!] Belum ada (jalankan shp_to_geojson.py)'}")
-    print("=" * 55)
-    print("  Admin   -> http://localhost:5000/admin/")
-    print("  User    -> http://localhost:5000/")
-    print("=" * 55)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
+
+
