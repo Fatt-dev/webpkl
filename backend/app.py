@@ -7,6 +7,9 @@ Server tersedia di: http://localhost:5000
 import os
 import json
 import uuid
+import base64
+import urllib.request
+import urllib.error
 from flask import Flask, send_from_directory, request, jsonify, abort, session, redirect, url_for, render_template_string
 from flask_cors import CORS
 
@@ -44,11 +47,73 @@ def read_json(filename):
         return json.load(f)
 
 
+# ─────────────────────────────────────────────
+# Sync ke GitHub Repository
+# ─────────────────────────────────────────────
+def sync_to_github(filename):
+    token = os.environ.get('GITHUB_TOKEN')
+    repo = os.environ.get('GITHUB_REPO', 'Fatt-dev/web_pkl')
+    if not token:
+        print(f"[GitHub Sync] GITHUB_TOKEN belum di-set. Skip sync GitHub untuk {filename}")
+        return False
+
+    file_path = f"backend/data/{filename}"
+    url = f"https://api.github.com/repos/{repo}/contents/{file_path}"
+    
+    local_path = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(local_path):
+        return False
+        
+    try:
+        with open(local_path, 'r', encoding='utf-8') as f:
+            content_str = f.read()
+        
+        content_b64 = base64.b64encode(content_str.encode('utf-8')).decode('utf-8')
+        
+        headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'Flask-BPS-App'
+        }
+        
+        # Ambil SHA file jika sudah ada di repo GitHub
+        sha = None
+        try:
+            req_get = urllib.request.Request(url, headers=headers, method='GET')
+            with urllib.request.urlopen(req_get) as resp:
+                resp_json = json.loads(resp.read().decode('utf-8'))
+                sha = resp_json.get('sha')
+        except Exception as e_get:
+            print(f"[GitHub Sync Info] File baru atau tidak ditemukan SHA: {e_get}")
+
+        # Payload commit untuk GitHub API
+        payload = {
+            'message': f'auto-data: update {filename} via admin panel',
+            'content': content_b64
+        }
+        if sha:
+            payload['sha'] = sha
+
+        payload_bytes = json.dumps(payload).encode('utf-8')
+        put_headers = {**headers, 'Content-Type': 'application/json'}
+        req_put = urllib.request.Request(url, data=payload_bytes, headers=put_headers, method='PUT')
+        
+        with urllib.request.urlopen(req_put) as resp_put:
+            print(f"[GitHub Sync] BERHASIL push {filename} ke repository GitHub ({repo})!")
+            return True
+            
+    except Exception as e:
+        print(f"[GitHub Sync Error] Gagal sync {filename} ke GitHub: {e}")
+        return False
+
+
 def write_json(filename, data):
     path = os.path.join(DATA_DIR, filename)
     os.makedirs(DATA_DIR, exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    # Otomatis sync perubahan ke GitHub
+    sync_to_github(filename)
 
 
 # ─────────────────────────────────────────────
