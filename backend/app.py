@@ -33,7 +33,7 @@ CORS(app)  # Izinkan semua origin (untuk development)
 app.secret_key = os.environ.get('SECRET_KEY', 'cda-bps-cilacap-secret-2024-xk9')
 
 # Password admin dari environment variable Railway
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD','123')
 
 
 # ─────────────────────────────────────────────
@@ -264,6 +264,27 @@ def delete_runtun(item_id):
     return jsonify({'success': True})
 
 
+@app.route('/api/runtun/rename', methods=['PUT'])
+def rename_runtun():
+    body = request.get_json(force=True)
+    old_nama = str(body.get('old_nama', '')).strip()
+    new_nama = str(body.get('new_nama', '')).strip()
+    if not old_nama or not new_nama:
+        return jsonify({'error': 'old_nama dan new_nama wajib diisi'}), 400
+    data = read_json('runtun_waktu.json')
+    if not isinstance(data, list):
+        return jsonify({'error': 'Data tidak valid'}), 500
+    updated_count = 0
+    for item in data:
+        if item.get('nama', '').lower() == old_nama.lower():
+            item['nama'] = new_nama
+            updated_count += 1
+    if updated_count == 0:
+        return jsonify({'error': 'Data tidak ditemukan'}), 404
+    write_json('runtun_waktu.json', data)
+    return jsonify({'success': True, 'count': updated_count, 'new_nama': new_nama})
+
+
 # ─────────────────────────────────────────────
 # API: Data Kecamatan
 # ─────────────────────────────────────────────
@@ -308,6 +329,52 @@ def save_kecamatan():
     data[tahun][tema][variabel] = nilai
     write_json('kecamatan.json', data)
     return jsonify({'success': True})
+
+
+@app.route('/api/kecamatan/tema', methods=['PUT'])
+def rename_kecamatan_tema():
+    body = request.get_json(force=True)
+    old_tema = str(body.get('old_tema', '')).strip()
+    new_tema = str(body.get('new_tema', '')).strip()
+    if not old_tema or not new_tema:
+        return jsonify({'error': 'old_tema dan new_tema wajib diisi'}), 400
+    data = read_json('kecamatan.json')
+    updated = False
+    for tahun in list(data.keys()):
+        if old_tema in data[tahun]:
+            tema_data = data[tahun].pop(old_tema)
+            data[tahun][new_tema] = tema_data
+            updated = True
+    if not updated:
+        return jsonify({'error': 'Tema tidak ditemukan'}), 404
+    write_json('kecamatan.json', data)
+    return jsonify({'success': True, 'old_tema': old_tema, 'new_tema': new_tema})
+
+
+@app.route('/api/kecamatan/variabel', methods=['PUT'])
+def rename_kecamatan_variabel():
+    body = request.get_json(force=True)
+    tahun = str(body.get('tahun', '')).strip()
+    tema = str(body.get('tema', '')).strip()
+    old_variabel = str(body.get('old_variabel', '')).strip()
+    new_variabel = str(body.get('new_variabel', '')).strip()
+    if not tema or not old_variabel or not new_variabel:
+        return jsonify({'error': 'tema, old_variabel, dan new_variabel wajib diisi'}), 400
+    data = read_json('kecamatan.json')
+    updated = False
+
+    years_to_check = [tahun] if (tahun and tahun != 'all' and tahun in data) else list(data.keys())
+    for t in years_to_check:
+        if t in data and tema in data[t] and old_variabel in data[t][tema]:
+            var_data = data[t][tema].pop(old_variabel)
+            data[t][tema][new_variabel] = var_data
+            updated = True
+
+    if not updated:
+        return jsonify({'error': 'Variabel tidak ditemukan'}), 404
+
+    write_json('kecamatan.json', data)
+    return jsonify({'success': True, 'old_variabel': old_variabel, 'new_variabel': new_variabel})
 
 
 @app.route('/api/kecamatan', methods=['DELETE'])

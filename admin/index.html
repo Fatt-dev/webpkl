@@ -305,31 +305,41 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Tema Besar</label>
-                            <div style="display: flex; gap: 10px;">
-                                <select id="kec-filter-tema" style="flex: 1;">
-                                    <option value="Pertanian" selected>Pertanian</option>
-                                    <option value="Kesehatan">Kesehatan</option>
-                                    <option value="Pendidikan">Pendidikan</option>
-                                    <option value="Ekonomi">Ekonomi</option>
-                                    <option value="Kependudukan">Kependudukan</option>
-                                </select>
-                                <button type="button" id="btn-delete-kec-tema"
-                                    style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus
-                                    Tema</button>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <label style="margin: 0;">Tema Besar</label>
+                                <div style="display: flex; gap: 6px;">
+                                    <button type="button" id="btn-edit-kec-tema" class="btn-sm btn-edit-sm" title="Edit Nama Tema">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit Nama
+                                    </button>
+                                    <button type="button" id="btn-delete-kec-tema" class="btn-sm btn-delete-sm" title="Hapus Tema">
+                                        <i class="fa-solid fa-trash-can"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
+                            <select id="kec-filter-tema" style="width: 100%;">
+                                <option value="Pertanian" selected>Pertanian</option>
+                                <option value="Kesehatan">Kesehatan</option>
+                                <option value="Pendidikan">Pendidikan</option>
+                                <option value="Ekonomi">Ekonomi</option>
+                                <option value="Kependudukan">Kependudukan</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Variabel</label>
-                            <div style="display: flex; gap: 10px;">
-                                <select id="kec-filter-variabel" style="flex: 1;">
-                                    <option value="" selected disabled>Pilih Variabel</option>
-                                </select>
-                                <button type="button" id="btn-delete-kec-var"
-                                    style="padding: 10px 15px; background: #e74c3c; color: white; font-weight: 700; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; white-space: nowrap;">Hapus
-                                    Variabel</button>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <label style="margin: 0;">Variabel</label>
+                                <div style="display: flex; gap: 6px;">
+                                    <button type="button" id="btn-edit-kec-var" class="btn-sm btn-edit-sm" title="Edit Nama Variabel">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit Nama
+                                    </button>
+                                    <button type="button" id="btn-delete-kec-var" class="btn-sm btn-delete-sm" title="Hapus Variabel">
+                                        <i class="fa-solid fa-trash-can"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
+                            <select id="kec-filter-variabel" style="width: 100%;">
+                                <option value="" selected disabled>Pilih Variabel</option>
+                            </select>
                         </div>
                     </div>
 
@@ -373,6 +383,28 @@
 
     <!-- Toast Notification Container -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Custom Modal Popup -->
+    <div id="custom-modal-overlay" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-header">
+                <div id="custom-modal-icon" class="custom-modal-icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h3 id="custom-modal-title">Edit Nama</h3>
+                    <p id="custom-modal-subtitle">Masukkan nama baru di bawah ini:</p>
+                </div>
+            </div>
+            <div class="custom-modal-body" id="custom-modal-body">
+                <input type="text" id="custom-modal-input" class="custom-modal-input" placeholder="Masukkan nama..." autocomplete="off">
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" id="custom-modal-cancel" class="btn-modal-cancel">Batal</button>
+                <button type="button" id="custom-modal-confirm" class="btn-modal-confirm">Simpan</button>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript Logic -->
     <script>
@@ -476,6 +508,90 @@
         }
 
         // ============================================================
+        // CUSTOM MODAL HELPER (REPLACES PROMPT & CONFIRM)
+        // ============================================================
+        function customPrompt({ title, subtitle, defaultValue = '', placeholder = 'Masukkan teks...' }) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('custom-modal-overlay');
+                const titleEl = document.getElementById('custom-modal-title');
+                const subtitleEl = document.getElementById('custom-modal-subtitle');
+                const iconEl = document.getElementById('custom-modal-icon');
+                const bodyEl = document.getElementById('custom-modal-body');
+                const inputEl = document.getElementById('custom-modal-input');
+                const cancelBtn = document.getElementById('custom-modal-cancel');
+                const confirmBtn = document.getElementById('custom-modal-confirm');
+
+                titleEl.textContent = title;
+                subtitleEl.textContent = subtitle;
+                iconEl.className = 'custom-modal-icon';
+                iconEl.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+                bodyEl.style.display = 'block';
+                inputEl.value = defaultValue;
+                inputEl.placeholder = placeholder;
+                confirmBtn.className = 'btn-modal-confirm';
+                confirmBtn.textContent = 'Simpan';
+
+                overlay.classList.add('active');
+                setTimeout(() => { inputEl.focus(); inputEl.select(); }, 50);
+
+                function cleanup() {
+                    overlay.classList.remove('active');
+                    cancelBtn.removeEventListener('click', onCancel);
+                    confirmBtn.removeEventListener('click', onConfirm);
+                    inputEl.removeEventListener('keydown', onKeyDown);
+                }
+
+                function onCancel() { cleanup(); resolve(null); }
+                function onConfirm() { const val = inputEl.value.trim(); cleanup(); resolve(val); }
+                function onKeyDown(e) {
+                    if (e.key === 'Enter') onConfirm();
+                    if (e.key === 'Escape') onCancel();
+                }
+
+                cancelBtn.addEventListener('click', onCancel);
+                confirmBtn.addEventListener('click', onConfirm);
+                inputEl.addEventListener('keydown', onKeyDown);
+            });
+        }
+
+        function customConfirm({ title, subtitle, confirmText = 'Ya, Hapus', isDanger = true }) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('custom-modal-overlay');
+                const titleEl = document.getElementById('custom-modal-title');
+                const subtitleEl = document.getElementById('custom-modal-subtitle');
+                const iconEl = document.getElementById('custom-modal-icon');
+                const bodyEl = document.getElementById('custom-modal-body');
+                const cancelBtn = document.getElementById('custom-modal-cancel');
+                const confirmBtn = document.getElementById('custom-modal-confirm');
+
+                titleEl.textContent = title;
+                subtitleEl.textContent = subtitle;
+                iconEl.className = `custom-modal-icon ${isDanger ? 'danger' : ''}`;
+                iconEl.innerHTML = isDanger ? '<i class="fa-solid fa-triangle-exclamation"></i>' : '<i class="fa-solid fa-circle-info"></i>';
+                bodyEl.style.display = 'none';
+                confirmBtn.className = `btn-modal-confirm ${isDanger ? 'danger' : ''}`;
+                confirmBtn.textContent = confirmText;
+
+                overlay.classList.add('active');
+
+                function cleanup() {
+                    overlay.classList.remove('active');
+                    cancelBtn.removeEventListener('click', onCancel);
+                    confirmBtn.removeEventListener('click', onConfirm);
+                    window.removeEventListener('keydown', onKeyDown);
+                }
+
+                function onCancel() { cleanup(); resolve(false); }
+                function onConfirm() { cleanup(); resolve(true); }
+                function onKeyDown(e) { if (e.key === 'Escape') onCancel(); }
+
+                cancelBtn.addEventListener('click', onCancel);
+                confirmBtn.addEventListener('click', onConfirm);
+                window.addEventListener('keydown', onKeyDown);
+            });
+        }
+
+        // ============================================================
         // DATA INDIKATOR
         // ============================================================
         const indYearSelect = document.getElementById('indikator-tahun-select');
@@ -545,8 +661,12 @@
             }
         });
 
-        addIndYearBtn.addEventListener('click', function () {
-            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):');
+        addIndYearBtn.addEventListener('click', async function () {
+            const yr = await customPrompt({
+                title: 'Tambah Tahun Data',
+                subtitle: 'Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):',
+                defaultValue: ''
+            });
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
@@ -660,18 +780,22 @@
             setupRuntunYearButtons();
         }
 
-        addRuntunTahunBtn.addEventListener('click', function () {
+        addRuntunTahunBtn.addEventListener('click', async function () {
             const buttons = runtunTahunListContainer.querySelectorAll('.runtun-tahun-btn');
             const currentYears = Array.from(buttons).map(b => parseInt(b.getAttribute('data-value'))).sort((a, b) => a - b);
 
             let nextYearSuggest = "";
             if (currentYears.length > 0) {
-                nextYearSuggest = currentYears[currentYears.length - 1] + 1;
+                nextYearSuggest = (currentYears[currentYears.length - 1] + 1).toString();
             } else {
                 nextYearSuggest = "2020";
             }
 
-            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):', nextYearSuggest);
+            const yr = await customPrompt({
+                title: 'Tambah Tahun Data Runtun Waktu',
+                subtitle: 'Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):',
+                defaultValue: nextYearSuggest
+            });
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
@@ -723,14 +847,15 @@
                 const el = document.createElement('div');
                 el.className = 'data-item';
                 el.innerHTML = `
-                    <div>
+                    <div class="data-item-content">
                         <h4>${nama}</h4>
-                        <p>Periode: ${range} &nbsp;|&nbsp; ${records.length} tahun data</p>
+                        <p><i class="fa-regular fa-calendar-days" style="margin-right: 4px;"></i> Periode: ${range} &nbsp;|&nbsp; ${records.length} tahun data</p>
                         <span class="nilai-tag">Nilai Terakhir (${latest.tahun}): ${parseFloat(latest.nilai).toLocaleString('id-ID')}</span>
                     </div>
                     <div class="aksi">
-                        <button class="edit" onclick="editRuntunGroup('${nama}')">Edit</button>
-                        <button class="hapus" onclick="deleteRuntunGroup('${nama}')">Hapus</button>
+                        <button class="edit-nama" onclick="renameRuntunGroup('${nama}')"><i class="fa-solid fa-pen-to-square"></i> Ubah Nama</button>
+                        <button class="edit" onclick="editRuntunGroup('${nama}')"><i class="fa-solid fa-sliders"></i> Edit Nilai</button>
+                        <button class="hapus" onclick="deleteRuntunGroup('${nama}')"><i class="fa-solid fa-trash-can"></i> Hapus</button>
                     </div>`;
                 runtunSavedListContainer.appendChild(el);
             });
@@ -809,8 +934,40 @@
             showToast('warning', 'Mode Edit', `Mengedit data "${nama}".`);
         };
 
+        window.renameRuntunGroup = async function (oldNama) {
+            const newNama = await customPrompt({
+                title: 'Edit Nama Data',
+                subtitle: `Masukkan nama baru untuk data runtun waktu "${oldNama}":`,
+                defaultValue: oldNama
+            });
+            if (!newNama || newNama.trim() === '' || newNama.trim() === oldNama) return;
+
+            try {
+                const res = await fetch(`${API}/api/runtun/rename`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ old_nama: oldNama, new_nama: newNama.trim() })
+                });
+                if (res.ok) {
+                    showToast('success', 'Nama Data Diperbarui', `Nama data "${oldNama}" berhasil diubah menjadi "${newNama.trim()}".`);
+                    await loadRuntunData();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        };
+
         window.deleteRuntunGroup = async function (nama) {
-            if (!confirm(`Hapus semua data runtun waktu untuk "${nama}"?`)) return;
+            const confirmed = await customConfirm({
+                title: 'Hapus Data Runtun Waktu?',
+                subtitle: `Semua data runtun waktu untuk "${nama}" akan dihapus secara permanen.`,
+                confirmText: 'Ya, Hapus Data',
+                isDanger: true
+            });
+            if (!confirmed) return;
             const ids = runtunData.filter(r => r.nama.toLowerCase() === nama.toLowerCase()).map(r => r.id);
             try {
                 await Promise.all(ids.map(id => fetch(`${API}/api/runtun/${id}`, { method: 'DELETE' })));
@@ -827,8 +984,10 @@
         const filterKecTahun = document.getElementById('kec-filter-tahun');
         const filterKecTema = document.getElementById('kec-filter-tema');
         const filterKecVar = document.getElementById('kec-filter-variabel');
-        const btnDeleteKecVar = document.getElementById('btn-delete-kec-var');
+        const btnEditKecTema = document.getElementById('btn-edit-kec-tema');
         const btnDeleteKecTema = document.getElementById('btn-delete-kec-tema');
+        const btnEditKecVar = document.getElementById('btn-edit-kec-var');
+        const btnDeleteKecVar = document.getElementById('btn-delete-kec-var');
         const btnSaveInlineKec = document.getElementById('btn-save-inline-kec');
         const searchKecInput = document.getElementById('kec-table-search');
         const tableBody = document.getElementById('kecamatan-table-body');
@@ -1064,8 +1223,12 @@
             }
         }
 
-        addKecInputYearBtn.addEventListener('click', function () {
-            const yr = prompt('Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):');
+        addKecInputYearBtn.addEventListener('click', async function () {
+            const yr = await customPrompt({
+                title: 'Tambah Tahun Data Kecamatan',
+                subtitle: 'Masukkan tahun baru (bisa isi beberapa sekaligus, contoh: 2026, 2027, 2028-2030):',
+                defaultValue: ''
+            });
             if (!yr) return;
             const years = parseYears(yr);
             if (years.length === 0) { showToast('error', 'Tidak Valid', 'Tidak ada tahun valid yang dimasukkan (1990 - 2100).'); return; }
@@ -1089,8 +1252,12 @@
             showToast('success', 'Tahun Berhasil', `Berhasil menambahkan/memilih ${years.length} tahun.`);
         });
 
-        btnAddKecTema.addEventListener('click', function () {
-            const newTema = prompt('Masukkan nama tema besar baru:');
+        btnAddKecTema.addEventListener('click', async function () {
+            const newTema = await customPrompt({
+                title: 'Tambah Tema Besar',
+                subtitle: 'Masukkan nama tema besar baru:',
+                defaultValue: ''
+            });
             if (!newTema) return;
             const cleanTema = newTema.trim();
             if (!cleanTema) return;
@@ -1106,6 +1273,41 @@
             showToast('success', 'Tema Ditambahkan', `Tema besar "${cleanTema}" berhasil ditambahkan.`);
         });
 
+        btnEditKecVar.addEventListener('click', async function () {
+            const tahun = filterKecTahun.value;
+            const tema = filterKecTema.value;
+            const oldVar = filterKecVar.value;
+            if (!tema || !oldVar) {
+                showToast('error', 'Gagal', 'Pilih tema dan variabel yang ingin diedit terlebih dahulu.');
+                return;
+            }
+            const newVar = await customPrompt({
+                title: 'Edit Nama Variabel',
+                subtitle: `Masukkan nama baru untuk variabel "${oldVar}":`,
+                defaultValue: oldVar
+            });
+            if (!newVar || newVar.trim() === '' || newVar.trim() === oldVar) return;
+
+            try {
+                const res = await fetch(`${API}/api/kecamatan/variabel`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tahun: "all", tema: tema, old_variabel: oldVar, new_variabel: newVar.trim() })
+                });
+                if (res.ok) {
+                    showToast('success', 'Variabel Diperbarui', `Variabel "${oldVar}" berhasil diubah menjadi "${newVar.trim()}".`);
+                    await updateKecVariables();
+                    filterKecVar.value = newVar.trim();
+                    renderKecamatanTable();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
         btnDeleteKecVar.addEventListener('click', async function () {
             const tahun = filterKecTahun.value;
             const tema = filterKecTema.value;
@@ -1114,7 +1316,13 @@
                 showToast('error', 'Gagal', 'Pilih tahun, tema, dan variabel terlebih dahulu.');
                 return;
             }
-            if (!confirm(`Hapus variabel "${variabel}" pada tema "${tema}" tahun ${tahun}?`)) return;
+            const confirmed = await customConfirm({
+                title: 'Hapus Variabel?',
+                subtitle: `Hapus variabel "${variabel}" pada tema "${tema}" tahun ${tahun}?`,
+                confirmText: 'Ya, Hapus Variabel',
+                isDanger: true
+            });
+            if (!confirmed) return;
             try {
                 const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${tema}&variabel=${encodeURIComponent(variabel)}`, {
                     method: 'DELETE'
@@ -1132,6 +1340,39 @@
             }
         });
 
+        btnEditKecTema.addEventListener('click', async function () {
+            const oldTema = filterKecTema.value;
+            if (!oldTema) {
+                showToast('error', 'Gagal', 'Pilih tema yang ingin diedit terlebih dahulu.');
+                return;
+            }
+            const newTema = await customPrompt({
+                title: 'Edit Nama Tema',
+                subtitle: `Masukkan nama baru untuk tema "${oldTema}":`,
+                defaultValue: oldTema
+            });
+            if (!newTema || newTema.trim() === '' || newTema.trim() === oldTema) return;
+
+            try {
+                const res = await fetch(`${API}/api/kecamatan/tema`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ old_tema: oldTema, new_tema: newTema.trim() })
+                });
+                if (res.ok) {
+                    showToast('success', 'Tema Diperbarui', `Tema "${oldTema}" berhasil diubah menjadi "${newTema.trim()}".`);
+                    await initKecamatanYears();
+                    filterKecTema.value = newTema.trim();
+                    await updateKecVariables();
+                } else {
+                    const err = await res.json();
+                    showToast('error', 'Gagal', err.error || 'Terjadi kesalahan.');
+                }
+            } catch (e) {
+                showToast('error', 'Gagal', 'Tidak dapat terhubung ke server.');
+            }
+        });
+
         btnDeleteKecTema.addEventListener('click', async function () {
             const tahun = filterKecTahun.value;
             const tema = filterKecTema.value;
@@ -1139,7 +1380,13 @@
                 showToast('error', 'Gagal', 'Pilih tahun dan tema terlebih dahulu.');
                 return;
             }
-            if (!confirm(`Hapus seluruh data tema "${tema}" pada tahun ${tahun}? Tindakan ini tidak bisa dibatalkan.`)) return;
+            const confirmed = await customConfirm({
+                title: 'Hapus Tema Besar?',
+                subtitle: `Hapus seluruh data tema "${tema}" pada tahun ${tahun}? Tindakan ini tidak dapat dibatalkan.`,
+                confirmText: 'Ya, Hapus Tema',
+                isDanger: true
+            });
+            if (!confirmed) return;
             try {
                 const res = await fetch(`${API}/api/kecamatan?tahun=${tahun}&tema=${encodeURIComponent(tema)}`, {
                     method: 'DELETE'
