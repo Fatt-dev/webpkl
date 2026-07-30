@@ -343,7 +343,9 @@ def rename_kecamatan_tema():
     for tahun in list(data.keys()):
         if old_tema in data[tahun]:
             tema_data = data[tahun].pop(old_tema)
-            data[tahun][new_tema] = tema_data
+            if new_tema not in data[tahun]:
+                data[tahun][new_tema] = {}
+            data[tahun][new_tema].update(tema_data)
             updated = True
     if not updated:
         return jsonify({'error': 'Tema tidak ditemukan'}), 404

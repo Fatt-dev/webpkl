@@ -1180,16 +1180,17 @@
                 const defaultYears = [2024, 2025, 2026];
                 const allYears = Array.from(new Set([...defaultYears, ...yearsFromDb])).sort((a, b) => b - a);
 
-                // Reset ke default agar tema yang dihapus hilang dari list
-                ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
-                // Tambah tema dari database jika belum ada di list default
+                // Ambil daftar semua tema unik yang benar-benar ada di database meta
+                const themesFromDb = new Set();
                 Object.values(meta).forEach(temas => {
-                    temas.forEach(t => {
-                        if (!ALL_THEMES.includes(t)) {
-                            ALL_THEMES.push(t);
-                        }
-                    });
+                    temas.forEach(t => themesFromDb.add(t));
                 });
+
+                if (themesFromDb.size > 0) {
+                    ALL_THEMES = Array.from(themesFromDb);
+                } else {
+                    ALL_THEMES = ["Pertanian", "Kesehatan", "Pendidikan", "Ekonomi", "Kependudukan"];
+                }
                 updateThemeSelects();
 
                 const prevInputVal = inputKecTahun.value;
