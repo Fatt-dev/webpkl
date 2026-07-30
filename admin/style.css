@@ -140,11 +140,13 @@ body {
     justify-content: center;
 }
 
+/* ── Credit section ── */
 .sidebar-credit {
     padding: 16px 18px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     margin: 8px 0;
+    overflow: hidden;
 }
 
 .credit-title {
@@ -154,6 +156,7 @@ body {
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.4);
     margin-bottom: 8px;
+    white-space: nowrap;
 }
 
 .credit-list {
@@ -171,6 +174,9 @@ body {
     font-weight: 500;
     padding-left: 10px;
     position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .credit-list li::before {
@@ -1282,24 +1288,56 @@ tbody tr:last-child td {
     100% { background-position: -200% 0; }
 }
 
-/* Responsive Breakpoints */
+/* ══════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS — ADMIN PANEL
+   Desktop TIDAK berubah. Mobile-friendly only.
+   ══════════════════════════════════════════════ */
+
+/* ── Hamburger toggle for mobile sidebar ── */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 200;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(9, 29, 51, 0.92);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: var(--transition);
+}
+.sidebar-toggle:hover { background: var(--secondary); }
+
+/* Mobile sidebar overlay backdrop */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active { display: block; }
+
 @media (max-width: 1200px) {
-    .runtun-container {
-        grid-template-columns: 1fr;
-    }
-    
+    .runtun-container { grid-template-columns: 1fr; }
     .kecamatan-container {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
     }
-    
+    /* Reset explicit grid placement agar card tidak tumpang tindih */
     .kecamatan-card:nth-child(1),
     .kecamatan-card:nth-child(2),
     .tabel-card {
-        grid-column: 1;
-    }
-    
-    .tabel-card {
-        grid-row: 3;
+        grid-column: 1 !important;
+        grid-row: auto !important;
     }
 }
 
@@ -1308,54 +1346,216 @@ tbody tr:last-child td {
         width: 80px;
         padding: 30px 10px;
     }
-    
-    .brand-text, .nav-text, .user-info {
-        display: none;
-    }
-    
-    .sidebar-brand, .sidebar-footer {
-        justify-content: center;
-    }
-    
-    .nav-item {
-        justify-content: center;
-        padding: 12px;
-    }
-    
-    .quick-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .dashboard-menu {
-        grid-template-columns: 1fr;
-    }
+    .brand-text, .nav-text, .user-info { display: none; }
+    .sidebar-brand, .sidebar-footer { justify-content: center; }
+    .nav-item { justify-content: center; padding: 12px; }
+    .dashboard-menu { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
+    .topbar { padding: 0 20px; }
+    .tab-content { padding: 20px; }
+    .indikator-grid { grid-template-columns: 1fr; }
+    .table-controls { flex-direction: column; align-items: stretch; }
+    .search-wrapper { width: 100%; }
+}
+
+/* ══════════════════════════════════════════════
+   SMARTPHONE (max-width: 640px)
+   ══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+    /* ── Show hamburger toggle ── */
+    .sidebar-toggle { display: flex; }
+
+    /* ── Sidebar: off-screen by default, slides in when .open ── */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 260px !important;
+        padding: 24px 16px !important;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    /* Restore text inside mobile-open sidebar */
+    .sidebar.open .brand-text,
+    .sidebar.open .nav-text,
+    .sidebar.open .user-info { display: block; }
+
+    .sidebar.open .sidebar-brand,
+    .sidebar.open .sidebar-footer { justify-content: flex-start; }
+
+    .sidebar.open .nav-item {
+        justify-content: flex-start;
+        padding: 14px 18px;
+    }
+
+    /* ── Main content takes full width ── */
+    .main-content { width: 100%; }
+
+    /* ── Topbar ── */
     .topbar {
-        padding: 0 20px;
+        padding: 0 16px 0 62px; /* left space for hamburger */
+        height: 64px;
+        min-height: 64px;
     }
-    
-    .tab-content {
-        padding: 20px;
+
+    .breadcrumb h2 { font-size: 16px; }
+    .breadcrumb span { font-size: 11px; }
+
+    .live-clock {
+        font-size: 11px;
+        padding: 6px 10px;
+        display: none; /* hide on very small screens */
     }
-    
-    .quick-stats-grid {
+
+    /* ── Tab Content ── */
+    .tab-content { padding: 16px; }
+
+    /* ── Overview: Admin header banner ── */
+    .admin-header {
+        padding: 28px 24px;
+        border-radius: 14px;
+        margin-bottom: 24px;
+    }
+    .admin-header h1 { font-size: 22px; }
+    .admin-header p  { font-size: 13px; }
+
+    /* ── Dashboard menu cards: 1 per row ── */
+    .dashboard-menu {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
-    
+
+    .menu-card {
+        padding: 24px;
+        border-radius: 14px;
+    }
+
+    /* ── Data Indikator ── */
+    .tahun-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 18px 20px;
+    }
+
+    .tahun-box label { font-size: 14px; }
+
+    .tahun-box select,
+    .tahun-box > div {
+        width: 100% !important;
+    }
+
+    .indikator-form {
+        padding: 20px;
+        border-radius: 14px;
+    }
+
     .indikator-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
-    
+
+    /* ── Runtun Waktu ── */
+    .runtun-container { grid-template-columns: 1fr; gap: 16px; }
+
+    .runtun-input-card,
+    .runtun-list-card {
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+    .tahun-list { gap: 6px; }
+
+    .tahun-list button { padding: 7px 11px; font-size: 11.5px; }
+
+    .data-item { padding: 14px 16px; }
+
+    .aksi {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .aksi button {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    /* ── Kecamatan ── */
+    .kecamatan-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .kecamatan-card,
+    .tabel-card {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        padding: 20px;
+        border-radius: 14px;
+    }
+
     .table-controls {
         flex-direction: column;
-        align-items: stretch;
+        gap: 10px;
     }
-    
-    .search-wrapper {
-        width: 100%;
+
+    .search-wrapper { width: 100%; margin: 0; }
+
+    thead th { padding: 10px 12px; font-size: 11px; }
+    tbody td  { padding: 10px 12px; font-size: 12px; }
+
+    .kec-inline-input { padding: 5px 8px; font-size: 13px; }
+
+    /* ── Btn sm (edit/hapus compact buttons) ── */
+    .btn-sm {
+        padding: 5px 9px;
+        font-size: 11px;
     }
+
+    /* ── Toast (bottom-left on mobile to avoid keyboard) ── */
+    .toast-container {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+    }
+
+    .toast {
+        min-width: unset;
+        max-width: 100%;
+    }
+
+    /* ── Custom Select ── */
+    .custom-select-trigger {
+        padding: 11px 14px;
+        font-size: 13.5px;
+    }
+
+    .custom-select-options { max-height: 150px; }
+
+    /* ── Custom Modal ── */
+    .custom-modal-card {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+/* ── Extra Small (max-width: 400px) ── */
+@media (max-width: 400px) {
+    .topbar { padding: 0 12px 0 58px; }
+    .tab-content { padding: 12px; }
+    .admin-header { padding: 22px 18px; }
+    .admin-header h1 { font-size: 18px; }
+    .runtun-input-card,
+    .runtun-list-card,
+    .kecamatan-card { padding: 16px; }
+    .aksi { justify-content: flex-start; }
 }
 
 /* ============================================================

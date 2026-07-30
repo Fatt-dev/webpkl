@@ -1279,30 +1279,43 @@ section {
 /* ==========================================
    RESPONSIVE DESIGN BREAKPOINTS
    ========================================== */
+
+/* ── Hamburger Menu Toggle (hidden on desktop) ── */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 20px;
+    transition: var(--transition);
+}
+.nav-toggle:hover { background: rgba(64,162,216,0.1); color: var(--ocean-deep); }
+
+/* ── Large Tablet ── */
 @media (max-width: 1200px) {
     .container {
         padding: 100px 24px 40px 24px;
     }
-
     .map-layout {
         grid-template-columns: 1fr;
     }
-
     .filter-panel {
         position: static;
         width: 100%;
     }
-
     .regression-layout {
         grid-template-columns: 1fr;
     }
-
     .regression-sidebar {
         position: static;
         width: 100%;
     }
 }
 
+/* ── Tablet ── */
 @media (max-width: 992px) {
     .navbar {
         height: auto;
@@ -1311,85 +1324,309 @@ section {
         gap: 12px;
         top: 10px;
     }
-
     .navbar nav {
         flex-wrap: wrap;
         justify-content: center;
         gap: 4px;
     }
-
     .navbar nav a {
         font-size: 12px;
         padding: 8px 12px;
     }
-
-    .hero h1 {
-        font-size: 54px;
-    }
-
-    .menu-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .hero h1 { font-size: 54px; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ── Mobile (768px) ── */
 @media (max-width: 768px) {
+    .hero h1 { font-size: 40px; }
+    .hero p { font-size: 15px; }
+    .button-group { flex-direction: column; align-items: stretch; gap: 12px; }
+    .btn { justify-content: center; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .chart-header { flex-direction: column; align-items: stretch; }
+    .chart-info { flex-direction: column; }
+    .info-item { width: 100%; }
+}
+
+/* ══════════════════════════════════════════════
+   SMARTPHONE BREAKPOINTS (max-width: 640px)
+   Tampilan desktop TIDAK berubah — hanya mobile
+   ══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+    /* ── Container & Padding ── */
+    .container {
+        padding: 90px 16px 40px 16px;
+    }
+
+    /* ── Navbar Mobile ── */
+    .navbar {
+        top: 10px;
+        width: calc(100% - 24px);
+        padding: 0 16px;
+        height: 60px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
+        border-radius: 16px;
+    }
+
+    .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Nav links: mobile slide-down menu */
+    .navbar nav {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 12px;
+        flex-direction: column;
+        gap: 4px;
+        box-shadow: 0 10px 30px rgba(11, 96, 176, 0.12);
+        animation: navSlideDown 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        z-index: 999;
+    }
+    .navbar nav.open { display: flex; }
+
+    @keyframes navSlideDown {
+        from { opacity: 0; transform: translateY(-12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .navbar nav a {
+        font-size: 14px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        width: 100%;
+        text-align: left;
+    }
+
+    /* ── Hero ── */
+    section { scroll-margin-top: 70px; }
+
+    .hero {
+        padding: 30px 0 90px 0;
+    }
+
     .hero h1 {
-        font-size: 40px;
+        font-size: 38px;
+        letter-spacing: -1px;
+        line-height: 1.15;
+        margin-bottom: 18px;
     }
 
     .hero p {
-        font-size: 15px;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 28px;
+        color: rgba(30, 41, 59, 0.75) !important;
     }
 
     .button-group {
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
+        gap: 10px;
     }
 
     .btn {
         justify-content: center;
+        padding: 14px 24px;
+        font-size: 14px;
     }
 
+    /* ── Sections Padding ── */
+    .indicator-section { padding: 80px 0 40px 0; }
+    .time-series-section { padding: 40px 0; }
+    .map-section { padding: 40px 0; }
+    .regression-section { padding: 40px 0; }
+
+    /* ── Section Headers ── */
+    .indicator-section h2,
+    .section-title h2,
+    .section-header h2 {
+        font-size: 24px;
+    }
+
+    .section-title p,
+    .section-header p {
+        font-size: 13.5px;
+    }
+
+    /* ── Indikator Cards: 2 kolom di mobile ── */
     .menu-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 
-    .summary-grid {
-        grid-template-columns: 1fr;
+    .menu-card {
+        padding: 20px 14px 16px;
+        border-radius: 16px;
+    }
+
+    .menu-card.ind-card {
+        padding: 18px 12px 14px;
+    }
+
+    .menu-card.ind-card h3 {
+        font-size: 0.72rem;
+        min-height: auto;
+    }
+
+    .ind-value {
+        font-size: 1.5rem;
+        min-height: auto;
+    }
+
+    .ind-unit {
+        font-size: 0.65rem;
+    }
+
+    .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .icon i { font-size: 18px; }
+
+    /* ── Time Series ── */
+    .time-filter {
+        width: 100%;
+    }
+
+    .time-series-card {
+        padding: 20px 16px;
+        border-radius: 16px;
     }
 
     .chart-header {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
     }
 
+    .chart-title h3 { font-size: 16px; }
+
     .chart-info {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: 100%;
     }
 
     .info-item {
-        width: 100%;
+        min-width: unset;
+        padding: 10px 8px;
+        border-radius: 10px;
     }
+
+    .info-item strong { font-size: 16px; }
+    .info-item span   { font-size: 10px; }
+
+    .chart-container { height: 260px; }
+
+    /* ── Peta / Map ── */
+    .map-layout { grid-template-columns: 1fr; gap: 16px; }
+
+    .filter-panel {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    #cilacap-map { height: 350px !important; border-radius: 12px !important; }
+
+    .map-container {
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    /* ── Regresi ── */
+    .regression-layout { grid-template-columns: 1fr; gap: 16px; }
+
+    .regression-sidebar {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .summary-card {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .summary-card h4    { font-size: 11px; }
+    .summary-card span  { font-size: 18px; }
+
+    .model-box, .chart-box, .result-table {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .equation {
+        font-size: 13px;
+        padding: 16px 12px;
+        word-break: break-word;
+    }
+
+    .result-table table { font-size: 12px; }
+    .result-table th,
+    .result-table td { padding: 8px 10px; }
+
+    /* ── Custom Select Dropdown ── */
+    .custom-select-trigger {
+        padding: 11px 14px;
+        font-size: 13.5px;
+    }
+
+    .custom-select-dropdown {
+        padding: 8px;
+    }
+
+    .custom-select-options {
+        max-height: 160px;
+    }
+
+    /* ── Wave Animation (lighter on mobile) ── */
+    .sea-waves-container { height: 80px; }
+    .sea-waves-container.mirrored { bottom: -80px; }
 }
 
-@media (max-width: 576px) {
+/* ── Extra Small (max-width: 400px) ── */
+@media (max-width: 400px) {
+    .hero h1 { font-size: 30px; }
+
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .menu-card.ind-card { padding: 14px 10px 12px; }
+    .ind-value { font-size: 1.25rem; }
+
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+
     .navbar {
-        width: 95%;
-        padding: 10px;
-    }
-
-    .logo-text {
-        display: none;
-        /* Keep layout clean on extremely small screens */
-    }
-
-    .hero h1 {
-        font-size: 32px;
+        width: calc(100% - 16px);
     }
 }
 
