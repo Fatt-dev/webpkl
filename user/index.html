@@ -224,7 +224,7 @@
                     </div>
                     <h3>Pengeluaran Per Kapita</h3>
                     <div class="ind-value" id="val-ind7">-</div>
-                    <span class="ind-unit">Ribu Rp (Disesuaikan)</span>
+                    <span class="ind-unit">Juta</span>
                 </div>
 
                 <!-- Ind 8: Laju Pertumbuhan Ekonomi -->
@@ -660,12 +660,12 @@
                 select.syncCustomSelect?.();
                 select.addEventListener('change', function () {
                     const filtered = data.filter(d => d.nama === this.value)
-                         .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
                     renderTimeSeriesChart(filtered, this.value);
                 });
                 if (names.length > 0) {
                     const filtered = data.filter(d => d.nama === names[0])
-                         .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
+                        .sort((a, b) => parseInt(a.tahun) - parseInt(b.tahun));
                     renderTimeSeriesChart(filtered, names[0]);
                 }
             } catch (e) {
