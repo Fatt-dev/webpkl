@@ -33,7 +33,7 @@ CORS(app)  # Izinkan semua origin (untuk development)
 app.secret_key = os.environ.get('SECRET_KEY', 'cda-bps-cilacap-secret-2024-xk9')
 
 # Password admin dari environment variable Railway
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD','123')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
 
 # ─────────────────────────────────────────────
