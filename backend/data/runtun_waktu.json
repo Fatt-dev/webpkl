@@ -7,20 +7,14 @@
   },
   {
     "nama": "Jumlah penduduk",
-    "tahun": "2021",
+    "tahun": "2022",
+    "nilai": 70.0,
+    "id": "6cd27903-7a25-4cc3-8537-7b716e2e04a2"
+  },
+  {
+    "nama": "Jumlah penduduk",
+    "tahun": "2025",
     "nilai": 230.0,
-    "id": "368fccda-e62c-4ffa-a628-72bf4585ca46"
-  },
-  {
-    "nama": "Jumlah penduduk",
-    "tahun": "2023",
-    "nilai": 200.0,
-    "id": "d2cead8f-d87b-4bb1-8a7c-bcc892ff7301"
-  },
-  {
-    "nama": "Jumlah penduduk",
-    "tahun": "2024",
-    "nilai": 450.0,
-    "id": "29d5a140-4d15-4abb-9b62-24ab20a70805"
+    "id": "18ed71df-75df-498d-819a-ce379d3bbd79"
   }
 ]
